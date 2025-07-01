@@ -3,13 +3,10 @@
         {
             "name": "Test All Features",
             "type": "node",
-            "program": "/home/codespace/.nodejs/current/bin/npx",
+            "program": "devcontainer",
             "args": [
-                "-y",
-                "dev-containers-cli-0.1.0.tgz",
-                "features-test",
-                "-d",
-                "/workspaces/features"
+                "features",
+                "test"
             ],
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
@@ -17,17 +14,12 @@
             "request": "launch"
         },
         {
-            "name": "Test Features (input)",
+            "name": "Test Features (with image)",
             "type": "node",
-            "program": "/home/codespace/.nodejs/current/bin/npx",
+            "program": "devcontainer",
             "args": [
-                "-y",
-                "dev-containers-cli-0.1.0.tgz",
-                "features-test",
-                "--directory",
-                "/workspaces/features",
-                "--features",
-                "${input:selectedFeatures}",
+                "features",
+                "test",
                 "--base-image",
                 "${input:selectedBaseImage}"
             ],
@@ -38,11 +30,6 @@
         }
     ],
     "inputs": [
-        {
-            "id": "selectedFeatures",
-            "type": "promptString",
-            "description": "Comma separated list of features to test",
-        },
         {
             "id": "selectedBaseImage",
             "type": "promptString",
