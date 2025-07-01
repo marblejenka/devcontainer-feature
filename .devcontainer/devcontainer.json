@@ -11,11 +11,11 @@
         "vscode": {
             "extensions": [
                 "mads-hartmann.bash-ide-vscode",
-				"Google.geminicodeassist"
+                "Google.geminicodeassist"
             ],
-			"settings": {
-				"geminicodeassist.updateChannel": "Insiders"
-			}
+            "settings": {
+                "geminicodeassist.updateChannel": "Insiders"
+            }
         }
     }
 }
