@@ -1,0 +1,7 @@
+workspace.code-workspace
+/features
+/feature-starter
+/node_modules
+/package-lock.json
+/package.json
+/.vscode

@@ -1,0 +1,31 @@
+{
+  "id": "gemini-cli",
+  "version": "0.0.1",
+  "name": "Gemini CLI",
+  "documentationURL": "https://github.com/marblejenka/devcontainer-feature-gemini-cli/tree/init/src/gemini-cli",
+  "description": "Installs Gemini CLI, and needed dependencies.",
+  "options": {
+    "version": {
+      "type": "string",
+      "proposals": [
+        "latest"
+      ],
+      "default": "latest",
+      "description": "Select or enter a Gemini CLI version to install"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "google.geminicodeassist"
+      ],
+      "settings": {
+        "geminicodeassist.updateChannel": "Insiders"
+      }
+    }
+  },
+  "containerEnv": {},
+  "dependsOn": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  }
+}
