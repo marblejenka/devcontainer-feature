@@ -17,7 +17,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-				"Google.geminicodeassist"
+				"google.geminicodeassist"
       ],
       "settings": {
 				"geminicodeassist.updateChannel": "Insiders"
