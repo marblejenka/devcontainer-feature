@@ -9,10 +9,13 @@
         "vscode": {
             "extensions": [
                 "mads-hartmann.bash-ide-vscode",
-                "Google.geminicodeassist"
+                "Google.geminicodeassist",
+                "github.copilot",
+                "github.copilot-chat"
             ],
             "settings": {
-                "geminicodeassist.updateChannel": "Insiders"
+                "geminicodeassist.updateChannel": "Insiders",
+                "github.copilot.chat.localeOverride": "ja"
             }
         }
     }
