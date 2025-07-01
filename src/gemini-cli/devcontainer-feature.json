@@ -17,16 +17,15 @@
   "customizations": {
     "vscode": {
       "extensions": [
-				"google.geminicodeassist"
+        "google.geminicodeassist"
       ],
       "settings": {
-				"geminicodeassist.updateChannel": "Insiders"
+        "geminicodeassist.updateChannel": "Insiders"
       }
     }
   },
-  "containerEnv": {
-  },
+  "containerEnv": {},
   "dependsOn": {
-    "ghcr.io/devcontainers/features/node:1": {} 
+    "ghcr.io/devcontainers/features/node:1": {}
   }
 }
