@@ -10,7 +10,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # install gemini cli
-if [ "$GEMINI_VERSION" = "latest" ]; then
+if [ "$GEMINI_CLI_VERSION" = "latest" ]; then
     npm install -g @google/gemini-cli
 else
     npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
