@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-GEMINI_CLI_VERSION="${VERSION:-"latest"}"
+GEMINI_CLI_VERSION=${VERSION:-latest}
 
 set -e
 
