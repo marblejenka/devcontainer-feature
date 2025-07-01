@@ -9,7 +9,7 @@
         "vscode": {
             "extensions": [
                 "mads-hartmann.bash-ide-vscode",
-                "Google.geminicodeassist",
+                "google.geminicodeassist",
                 "github.copilot",
                 "github.copilot-chat"
             ],
