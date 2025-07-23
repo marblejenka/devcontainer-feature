@@ -120,7 +120,11 @@ if [ "$INSTALL_APALACHE" = "true" ]; then
     fi
     wget -qN "https://github.com/informalsystems/apalache/releases/${APALACHE_VERSION_TAG}/apalache.tgz" -P "$TOOLSPATH"/
     tar -zxvf "$TOOLSPATH"/apalache.tgz --directory "$TOOLSPATH"/
-    ln -s "$TOOLSPATH"/apalache/bin/* /usr/local/bin/
+    if [ -d "$TOOLSPATH"/apalache/bin ] && [ "$(ls -A "$TOOLSPATH"/apalache/bin)" ]; then
+        ln -s "$TOOLSPATH"/apalache/bin/* /usr/local/bin/
+    else
+        echo "Error: Directory '$TOOLSPATH/apalache/bin' does not exist or is empty. Skipping symlink creation."
+    fi
     "$TOOLSPATH"/apalache/bin/apalache-mc config --enable-stats=true
 fi
 
