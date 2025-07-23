@@ -25,8 +25,8 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
-check "tla2tools.jar should exist" test -f /tools/tla2tools.jar
-check "CommunityModules-deps.jar should exist" test -f /tools/CommunityModules-deps.jar
+check "tla2tools.jar should exist" test -f /tlaplus/tla2tools.jar
+check "CommunityModules-deps.jar should exist" test -f /tlaplus/CommunityModules-deps.jar
 
 echo $PATH
 
