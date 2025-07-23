@@ -126,8 +126,7 @@ jobs:
                 "write_file"
               ],
               "telemetry": {
-                "enabled": true,
-                "target": "gcp"
+                "enabled": false
               },
               "sandbox": false
             }
