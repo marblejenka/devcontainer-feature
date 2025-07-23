@@ -53,6 +53,9 @@ jobs:
 
       - name: Checkout PR code
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Get PR details (pull_request & workflow_dispatch)
         id: get_pr
@@ -97,7 +100,7 @@ jobs:
           echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Run Gemini PR Review
-        uses: ./
+        uses: google-gemini/gemini-cli-action@main
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
           PR_NUMBER: ${{ steps.get_pr.outputs.pr_number || steps.get_pr_comment.outputs.pr_number }}
