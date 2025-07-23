@@ -2,7 +2,7 @@
   "id": "tlaplus",
   "version": "0.0.1",
   "name": "TLA+ Tools",
-  "documentationURL": "https://github.com/marblejenka/devcontainer-feature-gemini-cli/tree/init/src/tlaplus",
+  "documentationURL": "https://github.com/marblejenka/devcontainer-feature-tlaplus/tree/init/src/tlaplus",
   "description": "Installs TLA+ Tools, and needed dependencies.",
   "options": {
     "toolsPath": {
