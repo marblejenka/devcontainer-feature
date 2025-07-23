@@ -137,5 +137,9 @@ if [ "$INSTALL_TLAUC" = "true" ]; then
     wget -qN "https://github.com/tlaplus-community/tlauc/releases/${TLAUC_VERSION_TAG}/tlauc-linux.tar.gz" -P /tmp
     mkdir -p "$TOOLSPATH"/tlauc/bin
     tar -zxvf /tmp/tlauc-linux.tar.gz --directory "$TOOLSPATH"/tlauc/bin
-    ln -s "$TOOLSPATH"/tlauc/bin/* /usr/local/bin/
+    if [ "$(ls -A "$TOOLSPATH"/tlauc/bin/ 2>/dev/null)" ]; then
+        ln -sf "$TOOLSPATH"/tlauc/bin/* /usr/local/bin/
+    else
+        echo "Warning: Source directory '$TOOLSPATH/tlauc/bin/' is empty. No symbolic links created."
+    fi
 fi
