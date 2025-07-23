@@ -1,0 +1,103 @@
+{
+  "id": "tlaplus",
+  "version": "0.0.1",
+  "name": "TLA+ Tools",
+  "documentationURL": "https://github.com/marblejenka/devcontainer-feature-tlaplus/tree/init/src/tlaplus",
+  "description": "Installs TLA+ Tools, and needed dependencies.",
+  "options": {
+    "toolsPath": {
+      "type": "string",
+      "proposals": [
+        "/tlaplus"
+      ],
+      "default": "/tlaplus",
+      "description": "Enter a TLA+ Tools installation path"
+    },
+    "setupShorthand": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to setup shorthand commands for TLA+ Tools"
+    },
+    "installTlaplus": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLA+ Tools"
+    },
+    "versionForTlaplus": {
+      "type": "string",
+      "proposals": [
+        "nightly",
+        "latest",
+        "1.8.0",
+        "1.7.4"
+      ],
+      "default": "latest",
+      "description": "Select or enter a TLA+ Tools version to install"
+    },
+    "installCommunityModules": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLA+ CommunityModules"
+    },
+    "versionForCommunityModules": {
+      "type": "string",
+      "proposals": [
+        "latest",
+        "202505152026",
+        "202505132149"
+      ],
+      "default": "latest",
+      "description": "Select or enter a TLA+ CommunityModules version to install"
+    },
+    "installTlapm": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLAPM (TLA+ Proof Manager )"
+    },
+    "versionForTlapm": {
+      "type": "string",
+      "proposals": [
+        "1.6.0-pre",
+        "latest",
+        "202210041448",
+        "202208050903",
+        "1.4.5"
+      ],
+      "default": "1.6.0-pre",
+      "description": "Select or enter a TLAPM version to install"
+    },
+    "installApalache": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install Apalache"
+    },
+    "versionForApalache": {
+      "type": "string",
+      "proposals": [
+        "latest",
+        "0.47.2"
+      ],
+      "default": "latest",
+      "description": "Select or enter an Apalache version to install"
+    },
+    "installTLAUC": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLAUC"
+    },
+    "versionForTLAUC": {
+      "type": "string",
+      "proposals": [
+        "latest",
+        "1.1.0",
+        "1.0.5"
+      ],
+      "default": "latest",
+      "description": "Select or enter a TLAUC version to install"
+    }
+  },
+  "containerEnv": {},
+  "dependsOn": {
+    "ghcr.io/devcontainers/features/java:1": {}
+  }
+}
