@@ -7,7 +7,7 @@ Installs Gemini CLI, and needed dependencies.
 
 ```json
 "features": {
-    "ghcr.io/marblejenka/devcontainer-feature-gemini-cli/gemini-cli:0": {}
+    "ghcr.io/marblejenka/devcontainer-feature/gemini-cli:0": {}
 }
 ```
 
@@ -30,4 +30,4 @@ TODO
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/marblejenka/devcontainer-feature-gemini-cli/blob/main/src/gemini-cli/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/marblejenka/devcontainer-feature/blob/main/src/gemini-cli/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
