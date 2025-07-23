@@ -15,7 +15,7 @@
     },
     "setupShorthand": {
       "type": "boolean",
-      "default": false,
+      "default": true,
       "description": "Whether to setup shorthand commands for TLA+ Tools"
     },
     "installTlaplus": {

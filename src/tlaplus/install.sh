@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 TOOLSPATH=${TOOLSPATH:-"/tlaplus"}
-SETUP_SHORTHAND=${SETUPSHORTHAND:-false}
+SETUP_SHORTHAND=${SETUPSHORTHAND:-true}
 INSTALL_TLAPLUS=${INSTALLTLAPLUS:-true}
 VERSION_FOR_TLAPLUS=${VERSIONFORTLAPLUS:-"latest"}
 INSTALL_COMMUNITY_MODULES=${INSTALLCOMMUNITYMODULES:-true}
@@ -16,6 +16,12 @@ VERSION_FOR_TLAUC=${VERSIONFORTLAUC:-"latest"}
 set -e
 
 if [ "$SETUP_SHORTHAND" = "true" ]; then
+    ## Install git if not present
+    if ! command -v git >/dev/null 2>&1; then
+        apt-get update -y
+        apt-get install -y git
+    fi
+
     ## Fix issues with gitpod's stock .bashrc
     cp /etc/skel/.bashrc "$HOME"
 
@@ -45,6 +51,11 @@ fi
 ## Place to install TLC, TLAPM, Apalache, ...
 mkdir -p "$TOOLSPATH"
 
+## Install wget if not present
+if ! command -v wget >/dev/null 2>&1; then
+    apt-get update -y
+    apt-get install -y wget
+fi
 
 if [ "$INSTALL_TLAPLUS" = "true" ]; then
     ## Install TLA+ Tools https://nightly.tlapl.us/ or https://github.com/tlaplus/tlaplus/releases
