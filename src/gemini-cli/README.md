@@ -1,7 +1,6 @@
 
 # Gemini CLI (gemini-cli)
 
-Installs Gemini CLI, and needed dependencies.
 
 ## Example Usage
 
