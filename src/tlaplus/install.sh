@@ -68,11 +68,15 @@ if [ "$INSTALL_TLAPLUS" = "true" ]; then
         fi
         wget -qN "https://github.com/tlaplus/tlaplus/releases/${TLA_PLUS_VERSION_TAG}/tla2tools.jar" -P "$TOOLSPATH"/
     fi
-    echo "alias tlcrepl='java -cp \"$TOOLSPATH\"/tla2tools.jar tlc2.REPL'" >> "$HOME/.bashrc"
-    echo "alias tlc='java -cp \"$TOOLSPATH\"/tla2tools.jar tlc2.TLC'" >> "$HOME/.bashrc"
-    echo "alias sany='java -cp \"$TOOLSPATH\"/tla2tools.jar tla2sany.SANY'" >> "$HOME/.bashrc"
-    echo "alias pcal='java -cp \"$TOOLSPATH\"/tla2tools.jar pcal.trans'" >> "$HOME/.bashrc"
-    echo "alias tla2tex='java -cp \"$TOOLSPATH\"/tla2tools.jar tla2tex.TLA'" >> "$HOME/.bashrc"
+    for tool in tlcrepl:tlc2.REPL tlc:tlc2.TLC sany:tla2sany.SANY pcal:pcal.trans tla2tex:tla2tex.TLA; do
+        TOOL_NAME="${tool%%:*}"
+        TOOL_CLASS="${tool#*:}"
+        (
+            echo "#!/bin/sh"
+            echo "java -cp \"$TOOLSPATH/tla2tools.jar\" \"$TOOL_CLASS\" \"\$@\""
+        ) > "/usr/local/bin/$TOOL_NAME"
+        chmod +x "/usr/local/bin/$TOOL_NAME"
+    done
 fi
 
 if [ "$INSTALL_COMMUNITY_MODULES" = "true" ]; then
@@ -91,7 +95,6 @@ if [ "$INSTALL_TLAPM" = "true" ]; then
         wget -N "https://github.com/tlaplus/tlapm/releases/download/${VERSION_FOR_TLAPM}/${TLAPM_INSTALLER}" -P "$TOOLSPATH"/
         mkdir -p "$TOOLSPATH"/tlapm
         tar -xzf "$TOOLSPATH/${TLAPM_INSTALLER}" -C "$TOOLSPATH"/tlapm --strip-components=1
-        echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlapm/bin" >> "$HOME/.bashrc"
     else
         TLAPM_VERSION_TAG="latest/download"
         if [ "$VERSION_FOR_TLAPM" != "latest" ]; then
@@ -101,8 +104,8 @@ if [ "$INSTALL_TLAPM" = "true" ]; then
         wget -N "https://github.com/tlaplus/tlapm/releases/download/${TLAPM_VERSION_TAG}/${TLAPM_INSTALLER}" -P "$TOOLSPATH"/
         chmod +x "$TOOLSPATH/${TLAPM_INSTALLER}"
         "$TOOLSPATH/${TLAPM_INSTALLER}" -d "$TOOLSPATH"/tlaps
-        echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlaps/bin" >> "$HOME/.bashrc"
     fi
+    ln -s "$TOOLSPATH"/tlapm/bin/* /usr/local/bin/
 fi
 
 if [ "$INSTALL_APALACHE" = "true" ]; then
@@ -113,7 +116,7 @@ if [ "$INSTALL_APALACHE" = "true" ]; then
     fi
     wget -qN "https://github.com/informalsystems/apalache/releases/${APALACHE_VERSION_TAG}/apalache.tgz" -P "$TOOLSPATH"/
     tar -zxvf "$TOOLSPATH"/apalache.tgz --directory "$TOOLSPATH"/
-    echo "export PATH=\$PATH:\"$TOOLSPATH\"/apalache/bin" >> "$HOME/.bashrc"
+    ln -s "$TOOLSPATH"/apalache/bin/* /usr/local/bin/
     "$TOOLSPATH"/apalache/bin/apalache-mc config --enable-stats=true
 fi
 
@@ -124,7 +127,7 @@ if [ "$INSTALL_TLAUC" = "true" ]; then
         TLAUC_VERSION_TAG="download/v${VERSION_FOR_TLAUC}"
     fi
     wget -qN "https://github.com/tlaplus-community/tlauc/releases/${TLAUC_VERSION_TAG}/tlauc-linux.tar.gz" -P /tmp
-    mkdir -p "$TOOLSPATH"/tlauc
-    tar -zxvf /tmp/tlauc-linux.tar.gz --directory "$TOOLSPATH"/tlauc/
-    echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlauc" >> "$HOME/.bashrc"
+    mkdir -p "$TOOLSPATH"/tlauc/bin
+    tar -zxvf /tmp/tlauc-linux.tar.gz --directory "$TOOLSPATH"/tlauc/bin
+    ln -s "$TOOLSPATH"/tlauc/bin/* /usr/local/bin/
 fi
