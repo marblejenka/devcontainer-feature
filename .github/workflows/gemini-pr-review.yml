@@ -128,7 +128,8 @@ jobs:
               "telemetry": {
                 "enabled": false
               },
-              "sandbox": false
+              "sandbox": false,
+              "usageStatisticsEnabled": false
             }
           prompt: |
             You are an expert code reviewer. You have access to shell commands to gather PR information and perform the review.
