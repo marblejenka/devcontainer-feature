@@ -43,7 +43,7 @@ if [ "$INSTALL_TLAPLUS" = "false" ] && \
 fi
 
 ## Place to install TLC, TLAPM, Apalache, ...
-if [ "$TOOLSPATH" = "defalut" ]; then
+if [ "$TOOLSPATH" = "default" ]; then
     TOOLSPATH="/tools"
 fi
 mkdir -p "$TOOLSPATH"
