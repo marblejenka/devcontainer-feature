@@ -8,10 +8,10 @@
     "toolsPath": {
       "type": "string",
       "proposals": [
-        "defalut"
+        "default"
       ],
-      "default": "defalut",
-      "description": "Enter a TLA+ Tools installation path, or select 'defalut' to install in the default location"
+      "default": "default",
+      "description": "Enter a TLA+ Tools installation path, or select 'default' to install in the default location"
     },
     "setupShorthand": {
       "type": "boolean",
