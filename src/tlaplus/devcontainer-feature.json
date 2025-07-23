@@ -26,7 +26,10 @@
     "versionForTlaplus": {
       "type": "string",
       "proposals": [
-        "latest"
+        "nightly",
+        "latest",
+        "1.8.0",
+        "1.7.4"
       ],
       "default": "latest",
       "description": "Select or enter a TLA+ Tools version to install"
@@ -39,23 +42,29 @@
     "versionForCommunityModules": {
       "type": "string",
       "proposals": [
-        "latest"
+        "latest",
+        "202505152026",
+        "202505132149"
       ],
       "default": "latest",
       "description": "Select or enter a TLA+ CommunityModules version to install"
     },
-    "installTlaps": {
+    "installTlapm": {
       "type": "boolean",
       "default": true,
-      "description": "Whether to install TLAPS (TLA+ Proof System)"
+      "description": "Whether to install TLAPM (TLA+ Proof Manager )"
     },
-    "versionForTlaps": {
+    "versionForTlapm": {
       "type": "string",
       "proposals": [
+        "1.6.0-pre",
+        "latest",
+        "202210041448",
+        "202208050903",
         "1.4.5"
       ],
-      "default": "1.4.5",
-      "description": "Select or enter a TLAPS version to install"
+      "default": "1.6.0-pre",
+      "description": "Select or enter a TLAPM version to install"
     },
     "installApalache": {
       "type": "boolean",
@@ -65,7 +74,8 @@
     "versionForApalache": {
       "type": "string",
       "proposals": [
-        "latest"
+        "latest",
+        "0.47.2"
       ],
       "default": "latest",
       "description": "Select or enter an Apalache version to install"
@@ -78,7 +88,9 @@
     "versionForTLAUC": {
       "type": "string",
       "proposals": [
-        "latest"
+        "latest",
+        "1.1.0",
+        "1.0.5"
       ],
       "default": "latest",
       "description": "Select or enter a TLAUC version to install"
@@ -86,6 +98,6 @@
   },
   "containerEnv": {},
   "dependsOn": {
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/devcontainers/features/java:1": {}
   }
 }

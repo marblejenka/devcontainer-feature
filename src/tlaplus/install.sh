@@ -6,8 +6,8 @@ INSTALL_TLAPLUS=${INSTALLTLAPLUS:-true}
 VERSION_FOR_TLAPLUS=${VERSIONFORTLAPLUS:-"latest"}
 INSTALL_COMMUNITY_MODULES=${INSTALLCOMMUNITYMODULES:-true}
 VERSION_FOR_COMMUNITY_MODULES=${VERSIONFORCOMMUNITYMODULES:-"latest"}
-INSTALL_TLAPS=${INSTALLTLAPS:-true}
-VERSION_FOR_TLAPS=${VERSIONFORTLAPS:-"1.4.5"}
+INSTALL_TLAPM=${INSTALLTLAPM:-true}
+VERSION_FOR_TLAPM=${VERSIONFORTLAPM:-"1.4.5"}
 INSTALL_APALACHE=${INSTALLAPALACHE:-true}
 VERSION_FOR_APALACHE=${VERSIONFORAPALACHE:-"latest"}
 INSTALL_TLAUC=${INSTALLTLAUC:-true}
@@ -35,48 +35,86 @@ fi
 
 if [ "$INSTALL_TLAPLUS" = "false" ] && \
     [ "$INSTALL_COMMUNITY_MODULES" = "false" ] && \
-    [ "$INSTALL_TLAPS" = "false" ] && \
+    [ "$INSTALL_TLAPM" = "false" ] && \
     [ "$INSTALL_APALACHE" = "false" ] && \
     [ "$INSTALL_TLAUC" = "false" ]; then
      echo "No TLA+ tools selected for installation. Exiting."
      exit 0
 fi
 
-## Place to install TLC, TLAPS, Apalache, ...
+## Place to install TLC, TLAPM, Apalache, ...
+if [ "$TOOLSPATH" = "defalut" ]; then
+    TOOLSPATH="/tools"
+fi
 mkdir -p "$TOOLSPATH"
 
 
 if [ "$INSTALL_TLAPLUS" = "true" ]; then
-    ## Install TLA+ Tools (download from github instead of nightly.tlapl.us (inria) to only rely on github)
-    wget -qN https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar -P "$TOOLSPATH"/
+    ## Install TLA+ Tools https://nightly.tlapl.us/ or https://github.com/tlaplus/tlaplus/releases
+    if [ "$VERSION_FOR_TLAPLUS" = "nightly" ]; then
+        wget -qN "https://nightly.tlapl.us/dist/tla2tools.jar" -P "$TOOLSPATH"/
+    else
+        TLA_PLUS_VERSION_TAG="latest/download"
+        if [ "$VERSION_FOR_TLAPLUS" != "latest" ]; then
+            TLA_PLUS_VERSION_TAG="download/v${VERSION_FOR_TLAPLUS}"
+        fi
+        wget -qN "https://github.com/tlaplus/tlaplus/releases/${TLA_PLUS_VERSION_TAG}/tla2tools.jar" -P "$TOOLSPATH"/
+    fi
     echo "alias tlcrepl='java -cp \"$TOOLSPATH\"/tla2tools.jar tlc2.REPL'" >> "$HOME/.bashrc"
     echo "alias tlc='java -cp \"$TOOLSPATH\"/tla2tools.jar tlc2.TLC'" >> "$HOME/.bashrc"
+    echo "alias sany='java -cp \"$TOOLSPATH\"/tla2tools.jar tla2sany.SANY'" >> "$HOME/.bashrc"
+    echo "alias pcal='java -cp \"$TOOLSPATH\"/tla2tools.jar pcal.trans'" >> "$HOME/.bashrc"
+    echo "alias tla2tex='java -cp \"$TOOLSPATH\"/tla2tools.jar tla2tex.TLA'" >> "$HOME/.bashrc"
 fi
 
 if [ "$INSTALL_COMMUNITY_MODULES" = "true" ]; then
-    ## Install CommunityModules
-    wget -qN https://github.com/tlaplus/CommunityModules/releases/latest/download/CommunityModules-deps.jar -P "$TOOLSPATH"/
+    ## Install CommunityModules https://github.com/tlaplus/CommunityModules/releases
+    COMMUNITY_MODULES_VERSION_TAG="latest/download"
+    if [ "$VERSION_FOR_COMMUNITY_MODULES" != "latest" ]; then
+        COMMUNITY_MODULES_VERSION_TAG="download/${VERSION_FOR_COMMUNITY_MODULES}"
+    fi
+    wget -qN "https://github.com/tlaplus/CommunityModules/releases/${COMMUNITY_MODULES_VERSION_TAG}/CommunityModules-deps.jar" -P "$TOOLSPATH"/
 fi
 
-if [ "$INSTALL_TLAPS" = "true" ]; then
-    ## Install TLAPS (proof system)
-    wget -N https://github.com/tlaplus/tlapm/releases/download/v1.4.5/tlaps-1.4.5-x86_64-linux-gnu-inst.bin -P /tmp
-    chmod +x /tmp/tlaps-1.4.5-x86_64-linux-gnu-inst.bin
-    /tmp/tlaps-1.4.5-x86_64-linux-gnu-inst.bin -d "$TOOLSPATH"/tlaps
-    echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlaps/bin" >> "$HOME/.bashrc"
+if [ "$INSTALL_TLAPM" = "true" ]; then
+    ## Install TLAPM (TLA⁺ Proof Manager) https://github.com/tlaplus/tlapm/releases/
+    if [ "$VERSION_FOR_TLAPM" = "1.6.0-pre" ]; then
+        TLAPM_INSTALLER="tlapm-${VERSION_FOR_TLAPM}-x86_64-linux-gnu.tar.gz"
+        wget -N "https://github.com/tlaplus/tlapm/releases/download/v${VERSION_FOR_TLAPM}/${TLAPM_INSTALLER}" -P "$TOOLSPATH"/
+        tar -xzf "/tmp/${TLAPM_INSTALLER}" -C "$TOOLSPATH"/tlapm --strip-components=1
+        echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlapm/bin"
+    else
+        TLAPM_VERSION_TAG="latest/download"
+        if [ "$VERSION_FOR_TLAPM" != "latest" ]; then
+            TLAPM_VERSION_TAG="download/v${VERSION_FOR_TLAPM}"
+        fi
+        TLAPM_INSTALLER="tlaps-${VERSION_FOR_TLAPM}-x86_64-linux-gnu-inst.bin"
+        wget -N "https://github.com/tlaplus/tlapm/releases/download/${TLAPM_VERSION_TAG}/${TLAPM_INSTALLER}" -P "$TOOLSPATH"/
+        chmod +x "$TOOLSPATH/${TLAPM_INSTALLER}"
+        "$TOOLSPATH/${TLAPM_INSTALLER}" -d "$TOOLSPATH"/tlaps
+        echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlaps/bin" >> "$HOME/.bashrc"
+    fi
 fi
 
 if [ "$INSTALL_APALACHE" = "true" ]; then
-    ## Install Apalache
-    wget -qN https://github.com/informalsystems/apalache/releases/latest/download/apalache.tgz -P /tmp
+    ## Install Apalache https://github.com/informalsystems/apalache/releases
+    APALACHE_VERSION_TAG="latest/download"
+    if [ "$VERSION_FOR_APALACHE" != "latest" ]; then
+        APALACHE_VERSION_TAG="download/v${VERSION_FOR_APALACHE}"
+    fi
+    wget -qN "https://github.com/informalsystems/apalache/releases/${APALACHE_VERSION_TAG}/apalache.tgz" -P /tmp
     tar -zxvf /tmp/apalache.tgz --directory "$TOOLSPATH"/
     echo "export PATH=\$PATH:\"$TOOLSPATH\"/apalache/bin" >> "$HOME/.bashrc"
     "$TOOLSPATH"/apalache/bin/apalache-mc config --enable-stats=true
 fi
 
 if [ "$INSTALL_TLAUC" = "true" ]; then
-    ## Install TLAUC
-    wget -qN https://github.com/tlaplus-community/tlauc/releases/latest/download/tlauc-linux.tar.gz -P /tmp
+    ## Install TLAUC https://github.com/tlaplus-community/tlauc/releases/
+    TLAUC_VERSION_TAG="latest/download"
+    if [ "$VERSION_FOR_TLAUC" != "latest" ]; then
+        TLAUC_VERSION_TAG="download/v${VERSION_FOR_TLAUC}"
+    fi
+    wget -qN "https://github.com/tlaplus-community/tlauc/releases/${TLAUC_VERSION_TAG}/tlauc-linux.tar.gz" -P /tmp
     mkdir -p "$TOOLSPATH"/tlauc
     tar -zxvf /tmp/tlauc-linux.tar.gz --directory "$TOOLSPATH"/tlauc/
     echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlauc" >> "$HOME/.bashrc"
