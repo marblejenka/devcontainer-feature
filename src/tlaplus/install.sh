@@ -83,7 +83,7 @@ if [ "$INSTALL_TLAPM" = "true" ]; then
         wget -N "https://github.com/tlaplus/tlapm/releases/download/${VERSION_FOR_TLAPM}/${TLAPM_INSTALLER}" -P "$TOOLSPATH"/
         mkdir -p "$TOOLSPATH"/tlapm
         tar -xzf "$TOOLSPATH/${TLAPM_INSTALLER}" -C "$TOOLSPATH"/tlapm --strip-components=1
-        echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlapm/bin"
+        echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlapm/bin" >> "$HOME/.bashrc"
     else
         TLAPM_VERSION_TAG="latest/download"
         if [ "$VERSION_FOR_TLAPM" != "latest" ]; then
