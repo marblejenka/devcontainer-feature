@@ -105,7 +105,11 @@ if [ "$INSTALL_TLAPM" = "true" ]; then
         chmod +x "$TOOLSPATH/${TLAPM_INSTALLER}"
         "$TOOLSPATH/${TLAPM_INSTALLER}" -d "$TOOLSPATH"/tlaps
     fi
-    ln -s "$TOOLSPATH"/tlapm/bin/* /usr/local/bin/
+    if [ -d "$TOOLSPATH"/tlapm/bin ] && [ "$(ls -A "$TOOLSPATH"/tlapm/bin)" ]; then
+        ln -s "$TOOLSPATH"/tlapm/bin/* /usr/local/bin/
+    else
+        echo "Warning: '$TOOLSPATH/tlapm/bin' directory does not exist or is empty. Skipping symbolic link creation."
+    fi
 fi
 
 if [ "$INSTALL_APALACHE" = "true" ]; then
