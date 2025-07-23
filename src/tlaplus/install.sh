@@ -80,8 +80,9 @@ if [ "$INSTALL_TLAPM" = "true" ]; then
     ## Install TLAPM (TLA⁺ Proof Manager) https://github.com/tlaplus/tlapm/releases/
     if [ "$VERSION_FOR_TLAPM" = "1.6.0-pre" ]; then
         TLAPM_INSTALLER="tlapm-${VERSION_FOR_TLAPM}-x86_64-linux-gnu.tar.gz"
-        wget -N "https://github.com/tlaplus/tlapm/releases/download/v${VERSION_FOR_TLAPM}/${TLAPM_INSTALLER}" -P "$TOOLSPATH"/
-        tar -xzf "/tmp/${TLAPM_INSTALLER}" -C "$TOOLSPATH"/tlapm --strip-components=1
+        wget -N "https://github.com/tlaplus/tlapm/releases/download/${VERSION_FOR_TLAPM}/${TLAPM_INSTALLER}" -P "$TOOLSPATH"/
+        mkdir -p "$TOOLSPATH"/tlapm
+        tar -xzf "$TOOLSPATH/${TLAPM_INSTALLER}" -C "$TOOLSPATH"/tlapm --strip-components=1
         echo "export PATH=\$PATH:\"$TOOLSPATH\"/tlapm/bin"
     else
         TLAPM_VERSION_TAG="latest/download"
@@ -102,8 +103,8 @@ if [ "$INSTALL_APALACHE" = "true" ]; then
     if [ "$VERSION_FOR_APALACHE" != "latest" ]; then
         APALACHE_VERSION_TAG="download/v${VERSION_FOR_APALACHE}"
     fi
-    wget -qN "https://github.com/informalsystems/apalache/releases/${APALACHE_VERSION_TAG}/apalache.tgz" -P /tmp
-    tar -zxvf /tmp/apalache.tgz --directory "$TOOLSPATH"/
+    wget -qN "https://github.com/informalsystems/apalache/releases/${APALACHE_VERSION_TAG}/apalache.tgz" -P "$TOOLSPATH"/
+    tar -zxvf "$TOOLSPATH"/apalache.tgz --directory "$TOOLSPATH"/
     echo "export PATH=\$PATH:\"$TOOLSPATH\"/apalache/bin" >> "$HOME/.bashrc"
     "$TOOLSPATH"/apalache/bin/apalache-mc config --enable-stats=true
 fi

@@ -14,6 +14,7 @@ jobs:
       matrix:
         features:
           - gemini-cli
+          - tlaplus
         baseImage:
           - debian:latest
           - ubuntu:latest
@@ -37,6 +38,7 @@ jobs:
       matrix:
         features:
           - gemini-cli
+          - tlaplus
     steps:
       - uses: actions/checkout@v4
 
