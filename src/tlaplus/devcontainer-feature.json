@@ -1,0 +1,91 @@
+{
+  "id": "tlaplus",
+  "version": "0.0.1",
+  "name": "TLA+ Tools",
+  "documentationURL": "https://github.com/marblejenka/devcontainer-feature-gemini-cli/tree/init/src/tlaplus",
+  "description": "Installs TLA+ Tools, and needed dependencies.",
+  "options": {
+    "toolsPath": {
+      "type": "string",
+      "proposals": [
+        "defalut"
+      ],
+      "default": "defalut",
+      "description": "Enter a TLA+ Tools installation path, or select 'defalut' to install in the default location"
+    },
+    "setupShorthand": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to setup shorthand commands for TLA+ Tools"
+    },
+    "installTlaplus": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLA+ Tools"
+    },
+    "versionForTlaplus": {
+      "type": "string",
+      "proposals": [
+        "latest"
+      ],
+      "default": "latest",
+      "description": "Select or enter a TLA+ Tools version to install"
+    },
+    "installCommunityModules": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLA+ CommunityModules"
+    },
+    "versionForCommunityModules": {
+      "type": "string",
+      "proposals": [
+        "latest"
+      ],
+      "default": "latest",
+      "description": "Select or enter a TLA+ CommunityModules version to install"
+    },
+    "installTlaps": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLAPS (TLA+ Proof System)"
+    },
+    "versionForTlaps": {
+      "type": "string",
+      "proposals": [
+        "1.4.5"
+      ],
+      "default": "1.4.5",
+      "description": "Select or enter a TLAPS version to install"
+    },
+    "installApalache": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install Apalache"
+    },
+    "versionForApalache": {
+      "type": "string",
+      "proposals": [
+        "latest"
+      ],
+      "default": "latest",
+      "description": "Select or enter an Apalache version to install"
+    },
+    "installTLAUC": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to install TLAUC"
+    },
+    "versionForTLAUC": {
+      "type": "string",
+      "proposals": [
+        "latest"
+      ],
+      "default": "latest",
+      "description": "Select or enter a TLAUC version to install"
+    }
+  },
+  "containerEnv": {},
+  "dependsOn": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  }
+}
