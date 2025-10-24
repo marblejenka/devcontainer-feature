@@ -11,7 +11,7 @@ fi
 
 # install gemini cli
 if [ "$GEMINI_CLI_VERSION" = "latest" ]; then
-    npm install -g @google/gemini-cli
+    npm install -g @google/gemini-cli@latest
 else
     npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
 fi
