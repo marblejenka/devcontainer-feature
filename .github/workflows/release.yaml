@@ -1,6 +1,9 @@
 name: "Release dev container features & Generate Documentation"
 on:
   workflow_dispatch:
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
 
 jobs:
   deploy:
