@@ -13,7 +13,7 @@
       "default": "latest",
       "description": "Select or enter a Gemini CLI version to install"
     },
-    "config": {
+    "geminifiles": {
       "type": "string",
       "default": "",
       "description": "A git repository URL to clone for gemini-cli configuration. It is expected to have an install.sh at the root."

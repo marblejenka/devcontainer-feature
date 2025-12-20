@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 GEMINI_CLI_VERSION=${VERSION:-latest}
-CONFIG=${CONFIG:-""}
+GEMINIFILES=${GEMINIFILES:-""}
 
 set -e
 
@@ -17,14 +17,14 @@ else
     npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
 fi
 
-if [ -n "$CONFIG" ]; then
-    echo "Cloning config repository from $CONFIG"
-    git clone "$CONFIG" /tmp/gemini-config
-    if [ -f "/tmp/gemini-config/install.sh" ]; then
-        echo "Found install.sh in the config repository, running it."
-        chmod +x /tmp/gemini-config/install.sh
-        /tmp/gemini-config/install.sh
+if [ -n "$GEMINIFILES" ]; then
+    echo "Cloning gemnifiles repository from $GEMINIFILES"
+    git clone "$GEMINIFILES" /tmp/gemini-gemnifiles
+    if [ -f "/tmp/gemini-gemnifiles/install.sh" ]; then
+        echo "Found install.sh in the gemnifiles repository, running it."
+        chmod +x /tmp/gemini-gemnifiles/install.sh
+        /tmp/gemini-gemnifiles/install.sh
     else
-        echo "No install.sh found in the config repository."
+        echo "No install.sh found in the gemnifiles repository."
     fi
 fi
