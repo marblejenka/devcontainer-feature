@@ -1,0 +1,10 @@
+{
+    "geminifiles_test": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "gemini-cli": {
+                "geminifiles": "https://github.com/marblejenka/geminifiles.git"
+            }
+        }
+    }
+}

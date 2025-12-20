@@ -1,6 +1,6 @@
 {
   "id": "gemini-cli",
-  "version": "0.0.2",
+  "version": "0.1.1",
   "name": "Gemini CLI",
   "documentationURL": "https://github.com/marblejenka/devcontainer-feature/tree/main/src/gemini-cli",
   "description": "Installs Gemini CLI, and needed dependencies.",
@@ -12,6 +12,11 @@
       ],
       "default": "latest",
       "description": "Select or enter a Gemini CLI version to install"
+    },
+    "geminifiles": {
+      "type": "string",
+      "default": "",
+      "description": "A git repository URL to clone for gemini-cli configuration. It is expected to have an install.sh at the root."
     }
   },
   "customizations": {
@@ -26,6 +31,7 @@
   },
   "containerEnv": {},
   "dependsOn": {
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/git:1": {}
   }
 }
