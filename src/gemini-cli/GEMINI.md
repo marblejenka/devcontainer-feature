@@ -30,6 +30,7 @@ This feature includes the following VS Code customizations:
 This feature depends on the following:
 
 *   [Node.js](https://ghcr.io/devcontainers/features/node:1)
+*   [Git](https://ghcr.io/devcontainers/features/git:1)
 
 ## OS Support
 
