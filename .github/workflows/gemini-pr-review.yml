@@ -1,7 +1,7 @@
 name: 🧐 Gemini Pull Request Review
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened]
   pull_request_review_comment:
     types: [created]
@@ -18,7 +18,7 @@ jobs:
   review-pr:
     if: >
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'pull_request' && github.event.action == 'opened') ||
+      (github.event_name == 'pull_request_target' && github.event.action == 'opened') ||
       (github.event_name == 'issue_comment' &&
         github.event.issue.pull_request &&
         contains(github.event.comment.body, '@gemini-cli /review') &&
@@ -59,7 +59,7 @@ jobs:
 
       - name: Get PR details (pull_request & workflow_dispatch)
         id: get_pr
-        if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'pull_request_target' || github.event_name == 'workflow_dispatch'
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
