@@ -18,13 +18,13 @@ else
 fi
 
 if [ -n "$GEMINIFILES" ]; then
-    echo "Cloning gemnifiles repository from $GEMINIFILES"
-    git clone "$GEMINIFILES" /tmp/gemini-gemnifiles
-    if [ -f "/tmp/gemini-gemnifiles/install.sh" ]; then
-        echo "Found install.sh in the gemnifiles repository, running it."
-        chmod +x /tmp/gemini-gemnifiles/install.sh
-        /tmp/gemini-gemnifiles/install.sh
+    echo "Cloning geminifiles repository from $GEMINIFILES"
+    git clone "$GEMINIFILES" /tmp/gemini-geminifiles
+    if [ -f "/tmp/gemini-geminifiles/install.sh" ]; then
+        echo "Found install.sh in the geminifiles repository, running it."
+        chmod +x /tmp/gemini-geminifiles/install.sh
+        /tmp/gemini-geminifiles/install.sh
     else
-        echo "No install.sh found in the gemnifiles repository."
+        echo "No install.sh found in the geminifiles repository."
     fi
 fi
