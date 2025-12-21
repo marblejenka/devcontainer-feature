@@ -3,6 +3,10 @@
 GEMINI_CLI_VERSION=${VERSION:-latest}
 GEMINIFILES=${GEMINIFILES:-""}
 
+_REMOTE_USER=${_REMOTE_USER:-"${USER}"}
+GEMINIFILES_REPO_DEST=${GEMINIFILES_REPO_DEST:-"/home/${_REMOTE_USER}/geminifiles"}
+GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"/home/${_REMOTE_USER}/.gemini"}
+
 set -e
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -19,12 +23,14 @@ fi
 
 if [ -n "$GEMINIFILES" ]; then
     echo "Cloning geminifiles repository from $GEMINIFILES"
-    git clone "$GEMINIFILES" /tmp/gemini-geminifiles
-    if [ -f "/tmp/gemini-geminifiles/install.sh" ]; then
+    git clone "$GEMINIFILES" ${GEMINIFILES_REPO_DEST}
+    if [ -f "${GEMINIFILES_REPO_DEST}/install.sh" ]; then
         echo "Found install.sh in the geminifiles repository, running it."
-        chmod +x /tmp/gemini-geminifiles/install.sh
-        /tmp/gemini-geminifiles/install.sh
+        chmod +x ${GEMINIFILES_REPO_DEST}/install.sh
+        GEMINI_CONFIG_DIR="$GEMINI_CONFIG_DIR" ${GEMINIFILES_REPO_DEST}/install.sh
     else
         echo "No install.sh found in the geminifiles repository."
     fi
+else
+    echo "No geminifiles repository specified, skipping cloning and installation."
 fi
