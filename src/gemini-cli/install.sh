@@ -40,7 +40,8 @@ if [ -n "$GEMINIFILES" ]; then
         GEMINIFILES_DST="$GEMINI_CONFIG_DIR" ${GEMINIFILES_REPO}/install.sh
         if [ -d "$GEMINI_CONFIG_DIR" ]; then
             if id -u "${GEMINI_USER}" > /dev/null 2>&1; then
-                chown -R "${GEMINI_USER}" "$GEMINI_CONFIG_DIR"
+                GEMINI_GROUP=$(id -gn "${GEMINI_USER}" 2>/dev/null || echo "${GEMINI_USER}")
+                chown -R "${GEMINI_USER}:${GEMINI_GROUP}" "$GEMINI_CONFIG_DIR"
             else
                 echo "User ${GEMINI_USER} does not exist, skipping chown."
             fi
