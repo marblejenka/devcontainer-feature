@@ -1,6 +1,6 @@
 {
   "id": "gemini-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "Gemini CLI",
   "documentationURL": "https://github.com/marblejenka/devcontainer-feature/tree/main/src/gemini-cli",
   "description": "Installs Gemini CLI, and needed dependencies.",
