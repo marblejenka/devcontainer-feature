@@ -39,7 +39,7 @@ if [ -n "$GEMINIFILES" ]; then
         chmod +x ${GEMINIFILES_REPO}/install.sh
         GEMINIFILES_DST="$GEMINI_CONFIG_DIR" ${GEMINIFILES_REPO}/install.sh
         if [ -d "$GEMINI_CONFIG_DIR" ]; then
-            chown -R "${GEMINI_USER}:${GEMINI_USER}" "$GEMINI_CONFIG_DIR"
+            chown -R "${GEMINI_USER}" "$GEMINI_CONFIG_DIR"
         fi
     else
         echo "No install.sh found in the geminifiles repository."
