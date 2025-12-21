@@ -28,7 +28,9 @@ if [ -n "$GEMINIFILES" ]; then
         echo "Found install.sh in the geminifiles repository, running it."
         chmod +x ${GEMINIFILES_REPO_DEST}/install.sh
         GEMINIFILES_DST="$GEMINI_CONFIG_DIR" ${GEMINIFILES_REPO_DEST}/install.sh
-        chown -R "${_REMOTE_USER}:${_REMOTE_USER}" "$GEMINI_CONFIG_DIR"
+        if [ -d "$GEMINI_CONFIG_DIR" ]; then
+            chown -R "${_REMOTE_USER}:${_REMOTE_USER}" "$GEMINI_CONFIG_DIR"
+        fi
     else
         echo "No install.sh found in the geminifiles repository."
     fi
