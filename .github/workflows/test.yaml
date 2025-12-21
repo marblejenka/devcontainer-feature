@@ -16,11 +16,9 @@ jobs:
           - gemini-cli
           - tlaplus
         baseImage:
-          - debian:latest
           - ubuntu:latest
           - mcr.microsoft.com/devcontainers/base:ubuntu
           - mcr.microsoft.com/devcontainers/universal:linux
-          - mcr.microsoft.com/devcontainers/universal:focal
 
     steps:
       - uses: actions/checkout@v4
