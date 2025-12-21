@@ -34,6 +34,13 @@ if [ -n "$GEMINIFILES" ]; then
 
     git clone "$GEMINIFILES" ${GEMINIFILES_REPO}
 
+    if [ -d "${GEMINIFILES_REPO}" ]; then
+        if id -u "${GEMINI_USER}" > /dev/null 2>&1; then
+            chown -R "${GEMINI_USER}" "${GEMINIFILES_REPO}"
+        else
+            echo "User ${GEMINI_USER} does not exist, skipping chown for GEMINIFILES_REPO."
+        fi
+    fi
     if [ -f "${GEMINIFILES_REPO}/install.sh" ]; then
         echo "Found install.sh in the geminifiles repository, running it."
         chmod +x ${GEMINIFILES_REPO}/install.sh
