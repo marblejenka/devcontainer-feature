@@ -36,7 +36,8 @@ if [ -n "$GEMINIFILES" ]; then
 
     if [ -d "${GEMINIFILES_REPO}" ]; then
         if id -u "${GEMINI_USER}" > /dev/null 2>&1; then
-            chown -R "${GEMINI_USER}" "${GEMINIFILES_REPO}"
+            GEMINI_GROUP=$(id -gn "${GEMINI_USER}" 2>/dev/null || echo "${GEMINI_USER}")
+            chown -R "${GEMINI_USER}:${GEMINI_GROUP}" "${GEMINIFILES_REPO}"
         else
             echo "User ${GEMINI_USER} does not exist, skipping chown for GEMINIFILES_REPO."
         fi
