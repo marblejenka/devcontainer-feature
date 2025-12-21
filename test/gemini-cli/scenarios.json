@@ -8,7 +8,7 @@
         }
     },
     "node_user": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
         "remoteUser": "node",
         "features": {
             "gemini-cli": {
