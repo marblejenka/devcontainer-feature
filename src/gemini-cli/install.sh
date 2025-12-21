@@ -3,10 +3,6 @@
 GEMINI_CLI_VERSION=${VERSION:-latest}
 GEMINIFILES=${GEMINIFILES:-""}
 
-_REMOTE_USER=${_REMOTE_USER:-"${USER}"}
-GEMINIFILES_REPO_DEST=${GEMINIFILES_REPO_DEST:-"/home/${_REMOTE_USER}/geminifiles"}
-GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"/home/${_REMOTE_USER}/.gemini"}
-
 set -e
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -22,14 +18,28 @@ else
 fi
 
 if [ -n "$GEMINIFILES" ]; then
-    echo "Cloning geminifiles repository from $GEMINIFILES"
-    git clone "$GEMINIFILES" ${GEMINIFILES_REPO_DEST}
-    if [ -f "${GEMINIFILES_REPO_DEST}/install.sh" ]; then
+    GEMINI_USER=${_REMOTE_USER:-"${_CONTAINER_USER:-${SUDO_USER:-root}}"}
+
+    if [ "$GEMINI_USER" = "root" ]; then
+        GEMINIFILES_REPO=${GEMINIFILES_REPO:-"/root/geminifiles"}
+        GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"/root/.gemini"}
+    else
+        GEMINIFILES_REPO=${GEMINIFILES_REPO:-"/home/${GEMINI_USER}/geminifiles"}
+        GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"/home/${GEMINI_USER}/.gemini"}
+    fi
+
+    echo "Cloning geminifiles repository from $GEMINIFILES for ${GEMINI_USER}."
+    echo "Repo: ${GEMINIFILES_REPO}"
+    echo "Destination: ${GEMINI_CONFIG_DIR}"
+
+    git clone "$GEMINIFILES" ${GEMINIFILES_REPO}
+
+    if [ -f "${GEMINIFILES_REPO}/install.sh" ]; then
         echo "Found install.sh in the geminifiles repository, running it."
-        chmod +x ${GEMINIFILES_REPO_DEST}/install.sh
-        GEMINIFILES_DST="$GEMINI_CONFIG_DIR" ${GEMINIFILES_REPO_DEST}/install.sh
+        chmod +x ${GEMINIFILES_REPO}/install.sh
+        GEMINIFILES_DST="$GEMINI_CONFIG_DIR" ${GEMINIFILES_REPO}/install.sh
         if [ -d "$GEMINI_CONFIG_DIR" ]; then
-            chown -R "${_REMOTE_USER}:${_REMOTE_USER}" "$GEMINI_CONFIG_DIR"
+            chown -R "${GEMINI_USER}:${GEMINI_USER}" "$GEMINI_CONFIG_DIR"
         fi
     else
         echo "No install.sh found in the geminifiles repository."
