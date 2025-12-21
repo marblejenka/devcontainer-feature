@@ -1,5 +1,5 @@
 {
-    "geminifiles_test": {
+    "scenario_geminifiles_test": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
             "gemini-cli": {
@@ -7,7 +7,7 @@
             }
         }
     },
-    "node_user": {
+    "scenario_node_user": {
         "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
         "remoteUser": "node",
         "features": {
