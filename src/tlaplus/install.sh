@@ -57,6 +57,12 @@ if ! command -v wget >/dev/null 2>&1; then
     apt-get install -y wget
 fi
 
+## Install Java if not present
+if ! command -v java >/dev/null 2>&1; then
+    apt-get update -y
+    apt-get install -y default-jdk
+fi
+
 if [ "$INSTALL_TLAPLUS" = "true" ]; then
     ## Install TLA+ Tools https://nightly.tlapl.us/ or https://github.com/tlaplus/tlaplus/releases
     if [ "$VERSION_FOR_TLAPLUS" = "nightly" ]; then

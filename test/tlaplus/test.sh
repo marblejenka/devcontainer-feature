@@ -25,6 +25,7 @@ source dev-container-features-test-lib
 
 # Feature-specific tests
 # The 'check' command comes from the dev-container-features-test-lib.
+check "java command should exist" command -v java
 check "tla2tools.jar should exist" test -f /tlaplus/tla2tools.jar
 check "CommunityModules-deps.jar should exist" test -f /tlaplus/CommunityModules-deps.jar
 check "apalache.jar should exist" test -f /tlaplus/apalache/lib/apalache.jar
