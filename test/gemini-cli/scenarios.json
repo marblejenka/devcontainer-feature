@@ -15,5 +15,22 @@
                 "geminifiles": "https://github.com/marblejenka/geminifiles.git"
             }
         }
+    },
+    "scenario_keep_google_api_credentials": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "gemini-cli": {
+                "keep_google_api_credentials": true
+            }
+        }
+    },
+    "scenario_combined_options": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "gemini-cli": {
+                "geminifiles": "https://github.com/marblejenka/geminifiles.git",
+                "keep_google_api_credentials": true
+            }
+        }
     }
 }
