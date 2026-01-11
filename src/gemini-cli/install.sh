@@ -72,8 +72,46 @@ fi
 # Handle Google API credentials persistence if enabled
 if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
 
+    # Restrict the credentials persist directory to a safe base path
+    SAFE_BASE_DIR="/dc/gemini-cli"
+    SAFE_BASE_REALPATH=$(readlink -f "${SAFE_BASE_DIR}" 2>/dev/null || echo "${SAFE_BASE_DIR}")
+    PERSIST_REALPATH=$(readlink -f "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}" 2>/dev/null || echo "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}")
+
+    case "${PERSIST_REALPATH}" in
+        "${SAFE_BASE_REALPATH}"|${SAFE_BASE_REALPATH}/*)
+            # Allowed: within SAFE_BASE_DIR
+            ;;
+        *)
+            echo "Error: GOOGLE_API_CREDENTIALS_PERSIST_DIR must be under ${SAFE_BASE_REALPATH}. Current: ${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
+            exit 1
+            ;;
+    esac
+
+    # If the directory already exists, ensure it does not contain unexpected files
+    if [ -d "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}" ]; then
+        shopt -s nullglob
+        unexpected_files=()
+        for entry in "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"/*; do
+            base_entry=$(basename "${entry}")
+            if [ "${base_entry}" != "oauth_creds.json" ] && [ "${base_entry}" != ".gitignore" ]; then
+                unexpected_files+=("${entry}")
+            fi
+        done
+        shopt -u nullglob
+
+        if [ "${#unexpected_files[@]}" -ne 0 ]; then
+            echo "Error: GOOGLE_API_CREDENTIALS_PERSIST_DIR contains unexpected files:"
+            for f in "${unexpected_files[@]}"; do
+                echo "  - ${f}"
+            done
+            echo "Please choose an empty directory or one containing only oauth_creds.json."
+            exit 1
+        fi
+    fi
+
     mkdir -p "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
-    chown -R "${GEMINI_USER}:${GEMINI_GROUP}" "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
+    # Change ownership only on the credentials directory itself, not recursively
+    chown "${GEMINI_USER}:${GEMINI_GROUP}" "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
 
     # Ensure GEMINI_CONFIG_DIR exists
     mkdir -p "${GEMINI_CONFIG_DIR}"
