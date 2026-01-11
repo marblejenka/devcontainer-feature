@@ -22,6 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: "Bump Feature Versions"
+        run: |
+          set -eo pipefail
+          while IFS= read -r file; do
+            echo "Bumping version for $file"
+            tmp=$(mktemp)
+            # Increment patch version (index 2) after validating semantic version format (major.minor.patch)
+            jq '.version |= (if test("^[0-9]+\\.[0-9]+\\.[0-9]+$") then (split(".") | map(tonumber) | .[2] += 1 | map(tostring) | join(".")) else error("Invalid semantic version format for .version") end)' "$file" > "$tmp" && mv "$tmp" "$file"
+            echo "New version: $(jq -r .version "$file")"
+          done < <(find src -name "devcontainer-feature.json")
+
       - name: "Publish Features"
         uses: devcontainers/action@v1
         with:
@@ -32,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create PR for Documentation
+      - name: Create PR for Documentation and Version Bump
         id: push_image_info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,10 +56,10 @@ jobs:
           git config pull.rebase false
           branch=automated-documentation-update-$GITHUB_RUN_ID
           git checkout -b $branch
-          message='Automated documentation update'
+          message='Automated documentation update and version bump'
           # Add / update and commit
-          git add src/**/README.md
-          git commit -m 'Automated documentation update [skip ci]' || export NO_UPDATES=true
+          git add src/**/README.md src/**/devcontainer-feature.json
+          git commit -m 'Automated documentation update and version bump [skip ci]' || export NO_UPDATES=true
           # Push
           if [ "$NO_UPDATES" != "true" ] ; then
               git push origin "$branch"
