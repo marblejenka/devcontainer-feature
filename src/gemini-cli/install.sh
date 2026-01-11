@@ -135,7 +135,6 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
 
     # Create an empty file in the volume if it doesn't exist (to prevent permission errors)
     if [ ! -f "${PERSIST_AUTH_FILE}" ]; then
-        # Create the file if it does not exist to prevent permission errors
         touch "${PERSIST_AUTH_FILE}"
     fi
 
