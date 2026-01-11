@@ -24,14 +24,14 @@ jobs:
 
       - name: "Bump Feature Versions"
         run: |
-          set -e
-          find src -name "devcontainer-feature.json" | while read -r file; do
+          set -eo pipefail
+          while IFS= read -r file; do
             echo "Bumping version for $file"
             tmp=$(mktemp)
             # Increment patch version (index 2)
             jq '.version |= (split(".") | map(tonumber) | .[2] += 1 | map(tostring) | join("."))' "$file" > "$tmp" && mv "$tmp" "$file"
             echo "New version: $(jq -r .version "$file")"
-          done
+          done < <(find src -name "devcontainer-feature.json")
 
       - name: "Publish Features"
         uses: devcontainers/action@v1
