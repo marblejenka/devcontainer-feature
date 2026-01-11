@@ -1,36 +1,32 @@
 # AI/LLM Instructions for `devcontainer-feature` Repository
 
-This document provides instructions for an AI/LLM on how to interact with this repository.
+This document outlines the conventions and instructions for AI/LLM agents interacting with this repository.
 
-## `GEMINI.md` vs `README.md` vs `NOTES.md` Convention
+## Documentation Conventions
 
-In this repository, we follow a convention for `GEMINI.md` , `README.md` and `NOTES.md` files for each features:
+We maintain a strict distinction between human-facing and AI-facing documentation:
 
--   **`GEMINI.md`**: These files contain instructions specifically for AI/LLM agents. They provide context, conventions, and instructions on how to interact with the repository's code and resources.
--   **`README.md`**: These files contain human-readable descriptions of the project or feature. They are intended for developers and users. The file is automatically generated from `devcontainer-feature.json`, so you do not need to maintain.
--   **`NOTES.md`**: These files contain human-readable descriptions of the project or feature. They are intended for developers and users. The file will be merge into `README.md` at the time of relase. The file should have topics such as implicit context for the feature, technical tips. These topics are not genearted from `devcontainer-feature.json`.
+-   **`README.md`**: Human-readable descriptions intended for developers and users.
+-   **`GEMINI.md`**: Machine-oriented context, conventions, and instructions for AI agents.
+
+**Requirement:** Before performing any task, always check for a `GEMINI.md` file in the current directory and its parent directories to ensure compliance with local instructions.
 
 ## Repository Structure
 
-This repository contains a collection of [Devcontainer Features](https://containers.dev/implementors/features/).
+This repository follows the standard [Devcontainer Feature](https://containers.dev/implementors/features/) layout:
 
--   `.github/`: Contains GitHub Actions workflows for CI/CD and other automations.
--   `src/`: Contains the source code for the devcontainer features.
-    -   `gemini-cli/`: The `gemini-cli` feature.
-    -   `tlaplus/`: The `tlaplus` feature.
--   `test/`: Contains the tests for the features.
-    -   `gemini-cli/`: Tests for the `gemini-cli` feature.
-    -   `tlaplus/`: Tests for the `tlaplus` feature.
+-   **`src/`**: Contains the source code for each feature (e.g., `gemini-cli`, `tlaplus`).
+-   **`test/`**: Contains the test suites corresponding to each feature.
+-   **`.github/`**: Automation and CI/CD workflows.
 
-## Available Features
+### Available Features
 
-This repository provides the following features:
+-   **`gemini-cli`**: Installs the Gemini CLI and its environment.
+-   **`tlaplus`**: Installs TLA+ Tools and dependencies.
 
--   **`gemini-cli`**: Installs the Gemini CLI and its dependencies.
--   **`tlaplus`**: Installs TLA+ Tools and their dependencies.
+## Testing and Contribution Standards
 
-When working with a feature, you should look for the `README.md` file in the feature's directory for a human-readable description, and a `GEMINI.md` file for AI-specific instructions.
+When implementing features or adding tests, adhere to the following standards:
 
-## Testing Conventions
-
--   **Scenario Tests**: Scenario test files in the `test/` directory should always start with `scenario_`.
+-   **Scenario Tests**: Test scripts located within the `test/<feature>/` directory must be prefixed with `scenario_` (e.g., `scenario_keep_google_api_credentials.sh`). This prefix is required for proper identification and execution by the test runner.
+-   **Auto-generated Files**: Do not manually edit `README.md` files that are marked as auto-generated. These files are typically refreshed from `devcontainer-feature.json` during the release process.
