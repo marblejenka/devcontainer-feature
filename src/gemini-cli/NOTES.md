@@ -1,16 +1,16 @@
 ## Persistence of CLI Credentials
 
-This feature supports that your authentication state (e.g., Google OAuth tokens) is preserved even after rebuilding the container. By defining a Named Volume in `devcontainer-feature.json`, the sensitive credential files are stored outside the container's ephemeral file system. Note that this feature only targets the `Login with Google` option and ensure session across container rebuilds.
+This feature supports that your authentication state (e.g., Google OAuth tokens) is preserved even after rebuilding the container. By defining a Named Volume in `devcontainer.json`, the sensitive credential files are stored outside the container's ephemeral file system. Note that this feature only targets the `Login with Google` option and ensures the session persists across container rebuilds.
 
 ### How it works
 
-- A dedicated volume is expected to mounted at `/dc/gemini-cli`.
+- A dedicated volume is expected to be mounted at `/dc/gemini-cli`.
 - The authentication file (`~/.gemini/oauth_creds.json`) is symlinked to this persistent volume by the feature.
 - This allows your login session to persist while still allowing other configuration files to be managed via your GEMINIFILES repository.
 
-### Example of `devcontainer-feature.json`
+### Example of `devcontainer.json`
 
-```
+```json
 "features": {
     "gemini-cli": {
         "keep_google_api_credentials": true
