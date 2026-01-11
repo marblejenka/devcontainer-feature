@@ -1,13 +1,19 @@
 name: "Release dev container features & Generate Documentation"
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["CI - Test Features"]
+    types:
+      - completed
+    branches:
+      - main
   schedule:
     # Run weekly on Monday at 00:00 UTC
     - cron: '0 0 * * 1'
 
 jobs:
   deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
