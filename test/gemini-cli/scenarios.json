@@ -16,7 +16,7 @@
             }
         }
     },
-    "keep_google_api_credentials": {
+    "scenario_keep_google_api_credentials": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
             "gemini-cli": {
