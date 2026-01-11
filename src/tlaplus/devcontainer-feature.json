@@ -97,7 +97,5 @@
     }
   },
   "containerEnv": {},
-  "dependsOn": {
-    "ghcr.io/devcontainers/features/java:1": {}
-  }
+  "dependsOn": {}
 }
