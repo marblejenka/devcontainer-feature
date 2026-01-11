@@ -51,7 +51,7 @@ chk_chown() {
                 chown "$user:$group" "$target"
             fi
         else
-             echo "User $user does not exist, skipping chown for $target."
+            echo "User $user does not exist, skipping chown for $target."
         fi
     fi
 }
