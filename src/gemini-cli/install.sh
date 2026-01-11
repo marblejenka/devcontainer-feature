@@ -89,7 +89,7 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
     PERSIST_REALPATH=$(readlink -f "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}" 2>/dev/null || echo "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}")
 
     case "${PERSIST_REALPATH}" in
-        "${SAFE_BASE_REALPATH}"|${SAFE_BASE_REALPATH}/*)
+        "${SAFE_BASE_REALPATH}"|"${SAFE_BASE_REALPATH}"/*)
             # Allowed: within SAFE_BASE_DIR
             ;;
         *)
