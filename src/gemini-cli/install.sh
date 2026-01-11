@@ -145,6 +145,7 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
     # Delete existing file or old link in ~/.gemini and recreate the link
     rm -f "${AUTH_FILE}"
     ln -s "${PERSIST_AUTH_FILE}" "${AUTH_FILE}"
+    # Use chown -h to change ownership of the symlink itself; chk_chown does not support -h
     chown -h "${GEMINI_USER}:${GEMINI_GROUP}" "${AUTH_FILE}"
 
     echo "Persistence link created: ${AUTH_FILE} -> ${PERSIST_AUTH_FILE}"
