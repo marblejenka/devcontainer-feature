@@ -28,8 +28,8 @@ jobs:
           while IFS= read -r file; do
             echo "Bumping version for $file"
             tmp=$(mktemp)
-            # Increment patch version (index 2)
-            jq '.version |= (split(".") | map(tonumber) | .[2] += 1 | map(tostring) | join("."))' "$file" > "$tmp" && mv "$tmp" "$file"
+            # Increment patch version (index 2) after validating semantic version format (major.minor.patch)
+            jq '.version |= (if test("^[0-9]+\\.[0-9]+\\.[0-9]+$") then (split(".") | map(tonumber) | .[2] += 1 | map(tostring) | join(".")) else error("Invalid semantic version format for .version") end)' "$file" > "$tmp" && mv "$tmp" "$file"
             echo "New version: $(jq -r .version "$file")"
           done < <(find src -name "devcontainer-feature.json")
 
