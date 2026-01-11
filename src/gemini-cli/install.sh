@@ -124,12 +124,14 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
 
     # Create an empty file in the volume if it doesn't exist (to prevent permission errors)
     if [ ! -f "${PERSIST_AUTH_FILE}" ]; then
+        # Create the file if it does not exist to prevent permission errors
         touch "${PERSIST_AUTH_FILE}"
-        # Set permissions to 600 (owner read/write) to match gemini-cli specifications
-        chmod 600 "${PERSIST_AUTH_FILE}"
-        chown "${GEMINI_USER}:${GEMINI_GROUP}" "${PERSIST_AUTH_FILE}"
     fi
 
+    # Ensure persisted auth file has correct permissions and ownership
+    # Set permissions to 600 (owner read/write) to match gemini-cli specifications
+    chmod 600 "${PERSIST_AUTH_FILE}"
+    chown "${GEMINI_USER}:${GEMINI_GROUP}" "${PERSIST_AUTH_FILE}"
     # Delete existing file or old link in ~/.gemini and recreate the link
     rm -f "${AUTH_FILE}"
     ln -s "${PERSIST_AUTH_FILE}" "${AUTH_FILE}"
