@@ -26,7 +26,7 @@
     "google_api_credentials_persist_dir": {
       "type": "string",
       "default": "/dc/gemini-cli",
-      "description": "The directory where Google API credentials will be persisted if keep_google_api_credentials is true."
+      "description": "The directory where Google API credentials will be persisted when keep_google_api_credentials is enabled."
     }
   },
   "customizations": {
