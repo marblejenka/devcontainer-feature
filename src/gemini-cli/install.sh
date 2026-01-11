@@ -75,6 +75,10 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
     mkdir -p "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
     chown -R "${GEMINI_USER}:${GEMINI_GROUP}" "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
 
+    # Ensure GEMINI_CONFIG_DIR exists
+    mkdir -p "${GEMINI_CONFIG_DIR}"
+    chown "${GEMINI_USER}:${GEMINI_GROUP}" "${GEMINI_CONFIG_DIR}"
+
     # Create symbolic link for authentication file
     # Place the actual file in the volume and link it from ~/.gemini/oauth_creds.json
     AUTH_FILE="${GEMINI_CONFIG_DIR}/oauth_creds.json"
