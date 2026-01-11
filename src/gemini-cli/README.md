@@ -17,6 +17,8 @@ Installs Gemini CLI, and needed dependencies.
 |-----|-----|-----|-----|
 | version | Select or enter a Gemini CLI version to install | string | latest |
 | geminifiles | A git repository URL to clone for gemini-cli configuration. It is expected to have an install.sh at the root. | string | - |
+| keep_google_api_credentials | If true, persists Google API credentials across container rebuilds by storing them in a volume. Note: this parameter is for Google OAuth sessions. Does not cover API Keys or Vertex AI (gcloud) authentication. | boolean | false |
+| google_api_credentials_persist_dir | The directory where Google API credentials will be persisted when keep_google_api_credentials is enabled. | string | /dc/gemini-cli |
 
 ## Customizations
 
@@ -24,9 +26,42 @@ Installs Gemini CLI, and needed dependencies.
 
 - `google.geminicodeassist`
 
-## OS Support
+## Persistence of CLI Credentials
 
-TODO
+This feature ensures that your authentication state (e.g., Google OAuth tokens) is preserved even after rebuilding the container. By defining a Named Volume in `devcontainer.json`, the sensitive credential files are stored outside the container's ephemeral file system. Note that this feature only targets the `Login with Google` option and ensures the session persists across container rebuilds.
+
+### How it works
+
+- A dedicated volume is expected to be mounted at `/dc/gemini-cli`.
+- The authentication file (`~/.gemini/oauth_creds.json`) is symlinked to this persistent volume by the feature.
+- This allows your login session to persist while still allowing other configuration files to be managed via your GEMINIFILES repository.
+
+### Example of `devcontainer.json`
+
+```json
+"features": {
+    "gemini-cli": {
+        "keep_google_api_credentials": true
+    }
+},
+
+"mounts": [
+    {
+        "source": "gemini-cli-persistence",
+        "target": "/dc/gemini-cli",
+        "type": "volume"
+    }
+]
+```
+
+### Authentication Scope & Persistence Limitations
+
+This persistence feature is specifically designed for the `Login with Google` (OAuth) flow. Please note that it does **not** manage or affect the following authentication methods:
+
+- API Key (Token): If you use an API Key, it is not stored in the persistent volume. Users are expected to manage API Keys securely via environment variables or your preferred secret management provider.
+
+- Vertex AI: Authentication for Vertex AI is handled through the Google Cloud CLI (gcloud). To persist Vertex AI credentials, please use the `gcloud-cli-persistence` feature instead of (or alongside) this one.
+
 
 
 ---
