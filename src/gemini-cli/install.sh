@@ -120,6 +120,11 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
         fi
     fi
 
+    # Ensure the target user exists before creating a directory that will be owned by it
+    if ! id -u "${GEMINI_USER}" >/dev/null 2>&1; then
+        echo "Error: GEMINI_USER '${GEMINI_USER}' does not exist. Cannot set ownership for GOOGLE_API_CREDENTIALS_PERSIST_DIR."
+        exit 1
+    fi
     mkdir -p "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
     # Change ownership only on the credentials directory itself, not recursively
     chk_chown "${GEMINI_USER}" "${GEMINI_GROUP}" "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
