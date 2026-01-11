@@ -2,7 +2,7 @@ name: "Release dev container features & Generate Documentation"
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["CI - Test Features"]
+    workflows: ["CI - Test Features for main push"]
     types:
       - completed
     branches:
