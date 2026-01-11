@@ -16,12 +16,18 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
-# Set configuration directory based on user
-if [ "$GEMINI_USER" = "root" ]; then
-    GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"/root/.gemini"}
-else
-    GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"/home/${GEMINI_USER}/.gemini"}
+# Resolve user's home directory
+GEMINI_HOME=$(getent passwd "${GEMINI_USER}" | cut -d: -f6)
+if [ -z "${GEMINI_HOME}" ]; then
+    if [ "${GEMINI_USER}" = "root" ]; then
+        GEMINI_HOME="/root"
+    else
+        GEMINI_HOME="/home/${GEMINI_USER}"
+    fi
 fi
+
+# Set configuration directory based on user
+GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"${GEMINI_HOME}/.gemini"}
 
 # install gemini cli
 if [ "$GEMINI_CLI_VERSION" = "latest" ]; then
@@ -30,13 +36,29 @@ else
     npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
 fi
 
+# Helper to change ownership if user exists
+chk_chown() {
+    local user="$1"
+    local group="$2"
+    local target="$3"
+    local recursive="$4"
+
+    if [ -e "$target" ]; then
+        if id -u "$user" > /dev/null 2>&1; then
+            if [ "$recursive" = "true" ]; then
+                chown -R "$user:$group" "$target"
+            else
+                chown "$user:$group" "$target"
+            fi
+        else
+             echo "User $user does not exist, skipping chown for $target."
+        fi
+    fi
+}
+
 # setup .gemini files if GEMINIFILES is provided
 if [ -n "$GEMINIFILES" ]; then
-    if [ "$GEMINI_USER" = "root" ]; then
-        GEMINIFILES_REPO=${GEMINIFILES_REPO:-"/root/geminifiles"}
-    else
-        GEMINIFILES_REPO=${GEMINIFILES_REPO:-"/home/${GEMINI_USER}/geminifiles"}
-    fi
+    GEMINIFILES_REPO=${GEMINIFILES_REPO:-"${GEMINI_HOME}/geminifiles"}
 
     echo "Cloning geminifiles repository from $GEMINIFILES for ${GEMINI_USER}."
     echo "Repo: ${GEMINIFILES_REPO}"
@@ -44,24 +66,13 @@ if [ -n "$GEMINIFILES" ]; then
 
     git clone "$GEMINIFILES" ${GEMINIFILES_REPO}
 
-    if [ -d "${GEMINIFILES_REPO}" ]; then
-        if id -u "${GEMINI_USER}" > /dev/null 2>&1; then
-            chown -R "${GEMINI_USER}:${GEMINI_GROUP}" "${GEMINIFILES_REPO}"
-        else
-            echo "User ${GEMINI_USER} does not exist, skipping chown for GEMINIFILES_REPO."
-        fi
-    fi
+    chk_chown "${GEMINI_USER}" "${GEMINI_GROUP}" "${GEMINIFILES_REPO}" "true"
+
     if [ -f "${GEMINIFILES_REPO}/install.sh" ]; then
         echo "Found install.sh in the geminifiles repository, running it."
         chmod +x ${GEMINIFILES_REPO}/install.sh
         GEMINIFILES_DST="$GEMINI_CONFIG_DIR" ${GEMINIFILES_REPO}/install.sh
-        if [ -d "$GEMINI_CONFIG_DIR" ]; then
-            if id -u "${GEMINI_USER}" > /dev/null 2>&1; then
-                chown -R "${GEMINI_USER}:${GEMINI_GROUP}" "$GEMINI_CONFIG_DIR"
-            else
-                echo "User ${GEMINI_USER} does not exist, skipping chown."
-            fi
-        fi
+        chk_chown "${GEMINI_USER}" "${GEMINI_GROUP}" "${GEMINI_CONFIG_DIR}" "true"
     else
         echo "No install.sh found in the geminifiles repository."
     fi
@@ -111,11 +122,11 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
 
     mkdir -p "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
     # Change ownership only on the credentials directory itself, not recursively
-    chown "${GEMINI_USER}:${GEMINI_GROUP}" "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
+    chk_chown "${GEMINI_USER}" "${GEMINI_GROUP}" "${GOOGLE_API_CREDENTIALS_PERSIST_DIR}"
 
     # Ensure GEMINI_CONFIG_DIR exists
     mkdir -p "${GEMINI_CONFIG_DIR}"
-    chown "${GEMINI_USER}:${GEMINI_GROUP}" "${GEMINI_CONFIG_DIR}"
+    chk_chown "${GEMINI_USER}" "${GEMINI_GROUP}" "${GEMINI_CONFIG_DIR}"
 
     # Create symbolic link for authentication file
     # Place the actual file in the volume and link it from ~/.gemini/oauth_creds.json
@@ -131,7 +142,7 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
     # Ensure persisted auth file has correct permissions and ownership
     # Set permissions to 600 (owner read/write) to match gemini-cli specifications
     chmod 600 "${PERSIST_AUTH_FILE}"
-    chown "${GEMINI_USER}:${GEMINI_GROUP}" "${PERSIST_AUTH_FILE}"
+    chk_chown "${GEMINI_USER}" "${GEMINI_GROUP}" "${PERSIST_AUTH_FILE}"
     # Delete existing file or old link in ~/.gemini and recreate the link
     rm -f "${AUTH_FILE}"
     ln -s "${PERSIST_AUTH_FILE}" "${AUTH_FILE}"
