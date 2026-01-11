@@ -21,7 +21,7 @@
     "keep_google_api_credentials": {
       "type": "boolean",
       "default": false,
-      "description": "If true, persists Google API credentials across container rebuilds by storing them in a volume."
+      "description": "If true, persists Google API credentials across container rebuilds by storing them in a volume. Note: this parameter is for Google OAuth sessions. Does not cover API Keys or Vertex AI (gcloud) authentication."
     },
     "google_api_credentials_persist_dir": {
       "type": "string",
