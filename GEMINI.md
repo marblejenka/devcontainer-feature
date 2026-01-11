@@ -11,6 +11,14 @@ We maintain a strict distinction between human-facing and AI-facing documentatio
 
 **Requirement:** Before performing any task, always check for a `GEMINI.md` file in the current directory and its parent directories to ensure compliance with local instructions.
 
+## Feature Directory Structure
+
+Each feature directory (e.g., `src/gemini-cli`, `src/tlaplus`) must contain the following documentation files:
+
+-   **`GEMINI.md`**: AI/LLM specific instructions and context.
+-   **`README.md`**: Human-readable documentation (often auto-generated).
+-   **`NOTES.md`**: Additional notes, implementation details, or manual documentation that complements the README.
+
 ## Repository Structure
 
 This repository follows the standard [Devcontainer Feature](https://containers.dev/implementors/features/) layout:
