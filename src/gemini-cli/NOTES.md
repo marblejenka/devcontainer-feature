@@ -1,6 +1,6 @@
 ## Persistence of CLI Credentials
 
-This feature supports that your authentication state (e.g., Google OAuth tokens) is preserved even after rebuilding the container. By defining a Named Volume in `devcontainer.json`, the sensitive credential files are stored outside the container's ephemeral file system. Note that this feature only targets the `Login with Google` option and ensures the session persists across container rebuilds.
+This feature ensures that your authentication state (e.g., Google OAuth tokens) is preserved even after rebuilding the container. By defining a Named Volume in `devcontainer.json`, the sensitive credential files are stored outside the container's ephemeral file system. Note that this feature only targets the `Login with Google` option and ensures the session persists across container rebuilds.
 
 ### How it works
 
