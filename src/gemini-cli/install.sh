@@ -115,7 +115,7 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
             for f in "${unexpected_files[@]}"; do
                 echo "  - ${f}"
             done
-            echo "Please choose an empty directory or one containing only oauth_creds.json."
+            echo "Please choose an empty directory or one containing only oauth_creds.json and/or .gitignore."
             exit 1
         fi
     fi
