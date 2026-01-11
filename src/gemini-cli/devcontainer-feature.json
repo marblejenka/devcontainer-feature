@@ -17,6 +17,16 @@
       "type": "string",
       "default": "",
       "description": "A git repository URL to clone for gemini-cli configuration. It is expected to have an install.sh at the root."
+    },
+    "keep_google_api_credentials": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, persists Google API credentials across container rebuilds by storing them in a volume."
+    },
+    "google_api_credentials_persist_dir": {
+      "type": "string",
+      "default": "/dc/gemini-cli",
+      "description": "The directory where Google API credentials will be persisted if keep_google_api_credentials is true."
     }
   },
   "customizations": {
