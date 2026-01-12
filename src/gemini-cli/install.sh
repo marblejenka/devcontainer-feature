@@ -37,6 +37,8 @@ else
     npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
 fi
 
+hash -r
+
 # Helper to change ownership if user exists
 chk_chown() {
     local user="$1"
@@ -165,6 +167,15 @@ fi
 if [ -n "${EXTENSIONS}" ]; then
     echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
     
+    # Get the absolute path of the gemini executable
+    # Prioritize npm global prefix
+    NPM_GLOBAL_PREFIX=$(npm config get prefix -g)
+    if [ -x "${NPM_GLOBAL_PREFIX}/bin/gemini" ]; then
+        GEMINI_BIN="${NPM_GLOBAL_PREFIX}/bin/gemini"
+    else
+        GEMINI_BIN=$(which gemini || echo "/usr/local/bin/gemini")
+    fi
+
     # Use comma as delimiter to split the extensions string
     IFS=',' read -ra ADDR <<< "${EXTENSIONS}"
     for ext in "${ADDR[@]}"; do
@@ -173,9 +184,8 @@ if [ -n "${EXTENSIONS}" ]; then
         if [ -n "${ext}" ]; then
             echo "Installing extension: ${ext} for ${GEMINI_USER}"
             # Run as GEMINI_USER to ensure extensions are installed in their home directory
-            su - "${GEMINI_USER}" <<EOF
-                gemini extensions install "${ext}"
-EOF
+            # We ensure PATH is preserved and common paths are included
+            su "${GEMINI_USER}" -c "PATH=$PATH:/usr/local/bin:/usr/bin ${GEMINI_BIN} extensions install ${ext}"
         fi
     done
 fi
