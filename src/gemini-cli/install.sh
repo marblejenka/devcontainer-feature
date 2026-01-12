@@ -178,23 +178,44 @@ if [ -n "${EXTENSIONS}" ]; then
     echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
     
     # Get the absolute path of the gemini executable
-    GEMINI_BIN="/usr/local/share/npm-global/bin/gemini"
-    echo "Using gemini binary: ${GEMINI_BIN}"
+    # Prioritize npm global prefix
+    NPM_GLOBAL_PREFIX=$(npm config get prefix -g)
+    if [ -x "${NPM_GLOBAL_PREFIX}/bin/gemini" ]; then
+        GEMINI_BIN="${NPM_GLOBAL_PREFIX}/bin/gemini"
+    else
+        GEMINI_BIN=$(command -v gemini 2>/dev/null || echo "/usr/local/bin/gemini")
+    fi
 
+    # Verify that the resolved gemini binary is executable
+    if [ ! -x "${GEMINI_BIN}" ]; then
+        echo "Error: gemini binary not found or not executable at ${GEMINI_BIN}"
+        exit 1
+    fi
+    # Verify that GEMINI_BIN is an executable before proceeding
+    if [ ! -x "${GEMINI_BIN}" ]; then
+        echo "Error: gemini CLI binary not found or not executable (tried: ${GEMINI_BIN})." >&2
+        echo "       Ensure the gemini CLI is installed and available in PATH before installing extensions." >&2
+        exit 1
+    fi
     # Use comma as delimiter to split the extensions string
-    IFS=',' read -ra ADDR <<< "${EXTENSIONS}"
-    for ext in "${ADDR[@]}"; do
-        # Trim whitespace
-        ext=$(echo "${ext}" | xargs)
+    IFS=',' read -ra EXT_LIST <<< "${EXTENSIONS}"
+    for ext in "${EXT_LIST[@]}"; do
+        # Trim leading and trailing whitespace using bash parameter expansion
+        ext="${ext#"${ext%%[![:space:]]*}"}"
+        ext="${ext%"${ext##*[![:space:]]}"}"
         if [ -n "${ext}" ]; then
+            # Validate extension name to avoid shell injection via EXTENSIONS
+            if ! printf '%s\n' "${ext}" | grep -Eq '^[A-Za-z0-9_.:-]+$'; then
+                echo "Skipping invalid extension name (contains unsafe characters): ${ext}"
+                continue
+            fi
+
             echo "Installing extension: ${ext} for ${GEMINI_USER}"
             # Run as GEMINI_USER to ensure extensions are installed in their home directory
-            # We ensure PATH includes node and the shared gemini bin. 
-            # node might be in various places depending on how it was installed.
-            NODE_BIN=$(which node || echo "")
-            NODE_DIR=$(dirname "${NODE_BIN}")
-            su "${GEMINI_USER}" -c "PATH=\$PATH:/usr/local/share/npm-global/bin:${NODE_DIR} ${GEMINI_BIN} extensions install ${ext}"
-            echo "Extension installation command finished with exit code $?"
+            # We ensure PATH is preserved and common paths are included
+            # Pass the extension name via an environment variable to avoid injecting into the shell command
+            GEMINI_EXTENSION_NAME="${ext}" \
+            su "${GEMINI_USER}" -c "PATH=$PATH:/usr/local/bin:/usr/bin \"${GEMINI_BIN}\" extensions install \"\${GEMINI_EXTENSION_NAME}\""
         fi
     done
 fi
