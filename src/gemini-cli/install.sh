@@ -210,7 +210,7 @@ if [ -n "${EXTENSIONS}" ]; then
             # We ensure PATH is preserved and common paths are included
             # Pass the extension name via an environment variable to avoid injecting into the shell command
             GEMINI_EXTENSION_NAME="${ext}" \
-            su "${GEMINI_USER}" -c "PATH=$PATH:/usr/local/bin:/usr/bin \"${GEMINI_BIN}\" extensions install \"\${GEMINI_EXTENSION_NAME}\""
+            su "${GEMINI_USER}" -c "PATH=\"$PATH\":/usr/local/bin:/usr/bin \"${GEMINI_BIN}\" extensions install \"\${GEMINI_EXTENSION_NAME}\""
         fi
     done
 fi
