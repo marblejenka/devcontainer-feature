@@ -209,7 +209,7 @@ if [ -n "${EXTENSIONS}" ]; then
             echo "Installing Gemini CLI extension '${ext}' for user ${GEMINI_USER}..."
             # Execute installation as the GEMINI_USER to ensure extensions are placed in their home directory (~/.gemini/extensions).
             # We explicitly pass the current PATH to ensure 'node' and 'gemini' are found.
-            su "${GEMINI_USER}" -c "PATH='${PATH}' \"${GEMINI_BIN}\" extensions install \"${ext}\""
+            echo "Y" | su "${GEMINI_USER}" -c "PATH='${PATH}' \"${GEMINI_BIN}\" extensions install \"${ext}\""
         fi
     done
 fi
