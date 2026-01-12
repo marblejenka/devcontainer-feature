@@ -173,7 +173,7 @@ else
     echo "Google API credentials persistence not enabled, skipping."
 fi
 
-# Install Gemini CLI extensions if provided. 
+# Install Gemini CLI extensions if provided.
 # Note: These are extensions for the Gemini CLI itself, not VS Code extensions.
 if [ -n "${EXTENSIONS}" ]; then
     echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
