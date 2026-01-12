@@ -1,6 +1,6 @@
 {
   "id": "tlaplus",
-  "version": "0.0.3",
+  "version": "0.0.2",
   "name": "TLA+ Tools",
   "documentationURL": "https://github.com/marblejenka/devcontainer-feature/tree/main/src/tlaplus",
   "description": "Installs TLA+ Tools, and needed dependencies.",
