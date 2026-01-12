@@ -31,7 +31,7 @@
     "extensions": {
       "type": "string",
       "default": "",
-      "description": "A comma-separated list of Gemini CLI extensions to install (e.g., 'https://github.com/gemini-cli-extensions/conductor')."
+      "description": "A comma-separated list of Gemini CLI extensions to install (e.g., 'https://github.com/gemini-cli-extensions/conductor'). See https://github.com/gemini-cli-extensions for a list of available extensions."
     }
   },
   "customizations": {
