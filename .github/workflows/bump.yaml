@@ -1,4 +1,4 @@
-name: "Release dev container features & Generate Documentation"
+name: "Bump Feature Versions"
 on:
   workflow_run:
     workflows: ["CI - Test Features for main push"]
@@ -9,13 +9,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-    if: ${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
+  bump:
+    if: "${{ github.ref == 'refs/heads/main' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}"
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,7 +23,8 @@ jobs:
       - name: "Bump Feature Versions"
         run: |
           set -eo pipefail
-          while IFS= read -r file; do
+          while IFS= read -r file;
+          do
             feature_dir=$(dirname "$file")
             # Get the last commit that changed the "version" line in the json file
             last_bump_commit=$(git log -G '"version": "' -1 --format=%H -- "$file")
@@ -36,7 +36,7 @@ jobs:
             else
               # Check for any commits in the feature directory since the last version bump
               # (excluding the version bump commit itself)
-              changes=$(git log "${last_bump_commit}..HEAD" --oneline -- "$feature_dir")
+              changes=$(git log "${last_bump_commit}"..HEAD --oneline -- "$feature_dir")
               if [ -n "$changes" ]; then
                 echo "Changes detected in $feature_dir since last version bump ($last_bump_commit):"
                 echo "$changes"
@@ -55,13 +55,12 @@ jobs:
             fi
           done < <(find src -name "devcontainer-feature.json")
 
-      - name: "Publish Features"
+      - name: "Generate Documentation"
         uses: devcontainers/action@v1
         with:
-          publish-features: "true"
+          publish-features: "false"
           base-path-to-features: "./src"
           generate-docs: "true"
-          
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
