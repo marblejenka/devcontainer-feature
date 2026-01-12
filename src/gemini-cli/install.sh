@@ -173,9 +173,15 @@ if [ -n "${EXTENSIONS}" ]; then
     if [ -x "${NPM_GLOBAL_PREFIX}/bin/gemini" ]; then
         GEMINI_BIN="${NPM_GLOBAL_PREFIX}/bin/gemini"
     else
-        GEMINI_BIN=$(which gemini || echo "/usr/local/bin/gemini")
+        GEMINI_BIN=$(command -v gemini 2>/dev/null || echo "/usr/local/bin/gemini")
     fi
 
+    # Verify that GEMINI_BIN is an executable before proceeding
+    if [ ! -x "${GEMINI_BIN}" ]; then
+        echo "Error: gemini CLI binary not found or not executable (tried: ${GEMINI_BIN})." >&2
+        echo "       Ensure the gemini CLI is installed and available in PATH before installing extensions." >&2
+        exit 1
+    fi
     # Use comma as delimiter to split the extensions string
     IFS=',' read -ra EXT_LIST <<< "${EXTENSIONS}"
     for ext in "${EXT_LIST[@]}"; do
