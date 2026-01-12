@@ -176,6 +176,11 @@ if [ -n "${EXTENSIONS}" ]; then
         GEMINI_BIN=$(command -v gemini 2>/dev/null || echo "/usr/local/bin/gemini")
     fi
 
+    # Verify that the resolved gemini binary is executable
+    if [ ! -x "${GEMINI_BIN}" ]; then
+        echo "Error: gemini binary not found or not executable at ${GEMINI_BIN}"
+        exit 1
+    fi
     # Verify that GEMINI_BIN is an executable before proceeding
     if [ ! -x "${GEMINI_BIN}" ]; then
         echo "Error: gemini CLI binary not found or not executable (tried: ${GEMINI_BIN})." >&2
