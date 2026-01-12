@@ -178,10 +178,9 @@ if [ -n "${EXTENSIONS}" ]; then
     echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
     
     # Get the absolute path of the gemini executable
-    # Prioritize npm global prefix
-    NPM_GLOBAL_PREFIX=$(npm config get prefix -g)
-    if [ -x "${NPM_GLOBAL_PREFIX}/bin/gemini" ]; then
-        GEMINI_BIN="${NPM_GLOBAL_PREFIX}/bin/gemini"
+    # Prefer the previously configured npm prefix if available
+    if [ -n "${NPM_CONFIG_PREFIX}" ] && [ -x "${NPM_CONFIG_PREFIX}/bin/gemini" ]; then
+        GEMINI_BIN="${NPM_CONFIG_PREFIX}/bin/gemini"
     else
         GEMINI_BIN=$(command -v gemini 2>/dev/null || echo "/usr/local/bin/gemini")
     fi
