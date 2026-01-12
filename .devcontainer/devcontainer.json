@@ -3,10 +3,18 @@
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/marblejenka/devcontainer-feature/gemini-cli:0": {
-            "geminifiles": "https://github.com/marblejenka/geminifiles.git"
+            "geminifiles": "https://github.com/marblejenka/geminifiles.git",
+            "keep_google_api_credentials": true
         },
         "ghcr.io/marblejenka/devcontainer-feature/tlaplus:0": {}
     },
+    "mounts": [
+        {
+            "source": "gemini-cli-persistence",
+            "target": "/dc/gemini-cli",
+            "type": "volume"
+        }
+    ],
     "postCreateCommand": "npm install -g @devcontainers/cli",
     "remoteUser": "node",
     "customizations": {
