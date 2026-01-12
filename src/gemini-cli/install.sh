@@ -188,10 +188,18 @@ if [ -n "${EXTENSIONS}" ]; then
         # Trim whitespace
         ext=$(echo "${ext}" | xargs)
         if [ -n "${ext}" ]; then
+            # Validate extension name to avoid shell injection via EXTENSIONS
+            if ! printf '%s\n' "${ext}" | grep -Eq '^[A-Za-z0-9_.:-]+$'; then
+                echo "Skipping invalid extension name (contains unsafe characters): ${ext}"
+                continue
+            fi
+
             echo "Installing extension: ${ext} for ${GEMINI_USER}"
             # Run as GEMINI_USER to ensure extensions are installed in their home directory
             # We ensure PATH is preserved and common paths are included
-            su "${GEMINI_USER}" -c "PATH=$PATH:/usr/local/bin:/usr/bin ${GEMINI_BIN} extensions install ${ext}"
+            # Pass the extension name via an environment variable to avoid injecting into the shell command
+            GEMINI_EXTENSION_NAME="${ext}" \
+            su "${GEMINI_USER}" -c "PATH=$PATH:/usr/local/bin:/usr/bin \"${GEMINI_BIN}\" extensions install \"\${GEMINI_EXTENSION_NAME}\""
         fi
     done
 fi
