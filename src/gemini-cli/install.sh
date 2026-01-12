@@ -4,6 +4,7 @@ GEMINI_CLI_VERSION=${VERSION:-latest}
 GEMINIFILES=${GEMINIFILES:-""}
 KEEP_GOOGLE_API_CREDENTIALS=${KEEP_GOOGLE_API_CREDENTIALS:-false}
 GOOGLE_API_CREDENTIALS_PERSIST_DIR=${GOOGLE_API_CREDENTIALS_PERSIST_DIR:-"/dc/gemini-cli"}
+EXTENSIONS=${EXTENSIONS:-""}
 
 set -e
 
@@ -29,11 +30,23 @@ fi
 # Set configuration directory based on user
 GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"${GEMINI_HOME}/.gemini"}
 
-# install gemini cli
+# Install gemini cli to a shared location
+export NPM_CONFIG_PREFIX=/usr/local/share/npm-global
+export PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"
+mkdir -p "${NPM_CONFIG_PREFIX}"
+
 if [ "$GEMINI_CLI_VERSION" = "latest" ]; then
     npm install -g @google/gemini-cli@latest
 else
     npm install -g @google/gemini-cli@${GEMINI_CLI_VERSION}
+fi
+
+hash -r
+
+# Ensure the shared npm bin is in the default PATH for all users
+if [ ! -f /etc/profile.d/npm-global.sh ]; then
+    echo "export PATH=\$PATH:/usr/local/share/npm-global/bin" > /etc/profile.d/npm-global.sh
+    chmod +x /etc/profile.d/npm-global.sh
 fi
 
 # Helper to change ownership if user exists
@@ -158,5 +171,46 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
     echo "Persistence link created: ${AUTH_FILE} -> ${PERSIST_AUTH_FILE}"
 else
     echo "Google API credentials persistence not enabled, skipping."
+fi
+
+# Install Gemini CLI extensions if provided.
+# Note: These are extensions for the Gemini CLI itself, not VS Code extensions.
+if [ -n "${EXTENSIONS}" ]; then
+    echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
+    
+    # Get the absolute path of the gemini executable
+    # Prefer the shared npm prefix location configured earlier in the script
+    if [ -n "${NPM_CONFIG_PREFIX}" ] && [ -x "${NPM_CONFIG_PREFIX}/bin/gemini" ]; then
+        GEMINI_BIN="${NPM_CONFIG_PREFIX}/bin/gemini"
+    else
+        GEMINI_BIN=$(command -v gemini 2>/dev/null || echo "/usr/local/bin/gemini")
+    fi
+
+    # Verify that GEMINI_BIN is executable
+    if [ ! -x "${GEMINI_BIN}" ]; then
+        echo "Error: gemini CLI binary not found or not executable (tried: ${GEMINI_BIN})." >&2
+        exit 1
+    fi
+
+    # Use comma as delimiter to split the extensions string
+    IFS=',' read -ra EXT_LIST <<< "${EXTENSIONS}"
+    for ext in "${EXT_LIST[@]}"; do
+        # Trim whitespace
+        ext="${ext#"${ext%%[![:space:]]*}"}"
+        ext="${ext%"${ext##*[![:space:]]}"}"
+        
+        if [ -n "${ext}" ]; then
+            # Validate extension name/URL to avoid shell injection
+            if ! printf '%s\n' "${ext}" | grep -Eq '^[A-Za-z0-9_.:/@-]+$'; then
+                echo "Skipping invalid extension name (contains unsafe characters): ${ext}"
+                continue
+            fi
+
+            echo "Installing Gemini CLI extension '${ext}' for user ${GEMINI_USER}..."
+            # Execute installation as the GEMINI_USER to ensure extensions are placed in their home directory (~/.gemini/extensions).
+            # We explicitly pass the current PATH to ensure 'node' and 'gemini' are found.
+            echo "Y" | su "${GEMINI_USER}" -c "PATH='${PATH}' \"${GEMINI_BIN}\" extensions install \"${ext}\""
+        fi
+    done
 fi
 

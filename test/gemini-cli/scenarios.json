@@ -32,5 +32,13 @@
                 "keep_google_api_credentials": true
             }
         }
+    },
+    "scenario_extensions": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "gemini-cli": {
+                "extensions": "https://github.com/gemini-cli-extensions/conductor"
+            }
+        }
     }
 }
