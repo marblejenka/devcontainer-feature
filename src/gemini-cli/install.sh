@@ -166,8 +166,8 @@ if [ -n "${EXTENSIONS}" ]; then
     echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
     
     # Use comma as delimiter to split the extensions string
-    IFS=',' read -ra ADDR <<< "${EXTENSIONS}"
-    for ext in "${ADDR[@]}"; do
+    IFS=',' read -ra EXT_LIST <<< "${EXTENSIONS}"
+    for ext in "${EXT_LIST[@]}"; do
         # Trim whitespace
         ext=$(echo "${ext}" | xargs)
         if [ -n "${ext}" ]; then
