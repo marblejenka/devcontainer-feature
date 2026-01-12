@@ -190,8 +190,9 @@ if [ -n "${EXTENSIONS}" ]; then
     # Use comma as delimiter to split the extensions string
     IFS=',' read -ra EXT_LIST <<< "${EXTENSIONS}"
     for ext in "${EXT_LIST[@]}"; do
-        # Trim whitespace
-        ext=$(echo "${ext}" | xargs)
+        # Trim leading and trailing whitespace using bash parameter expansion
+        ext="${ext#"${ext%%[![:space:]]*}"}"
+        ext="${ext%"${ext##*[![:space:]]}"}"
         if [ -n "${ext}" ]; then
             # Validate extension name to avoid shell injection via EXTENSIONS
             if ! printf '%s\n' "${ext}" | grep -Eq '^[A-Za-z0-9_.:-]+$'; then
