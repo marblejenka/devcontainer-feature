@@ -19,6 +19,7 @@ Installs Gemini CLI, and needed dependencies.
 | geminifiles | A git repository URL to clone for gemini-cli configuration. It is expected to have an install.sh at the root. | string | - |
 | keep_google_api_credentials | If true, persists Google API credentials across container rebuilds by storing them in a volume. Note: this parameter is for Google OAuth sessions. Does not cover API Keys or Vertex AI (gcloud) authentication. | boolean | false |
 | google_api_credentials_persist_dir | The directory where Google API credentials will be persisted when keep_google_api_credentials is enabled. | string | /dc/gemini-cli |
+| extensions | A comma-separated list of Gemini CLI extensions to install (e.g., 'https://github.com/gemini-cli-extensions/conductor'). See https://github.com/gemini-cli-extensions for a list of available extensions. | string | - |
 
 ## Customizations
 
