@@ -30,7 +30,11 @@ fi
 # Set configuration directory based on user
 GEMINI_CONFIG_DIR=${GEMINI_CONFIG_DIR:-"${GEMINI_HOME}/.gemini"}
 
-# install gemini cli
+# Install gemini cli to a shared location
+export NPM_CONFIG_PREFIX=/usr/local/share/npm-global
+export PATH="${NPM_CONFIG_PREFIX}/bin:${PATH}"
+mkdir -p "${NPM_CONFIG_PREFIX}"
+
 if [ "$GEMINI_CLI_VERSION" = "latest" ]; then
     npm install -g @google/gemini-cli@latest
 else
@@ -38,6 +42,12 @@ else
 fi
 
 hash -r
+
+# Ensure the shared npm bin is in the default PATH for all users
+if [ ! -f /etc/profile.d/npm-global.sh ]; then
+    echo "export PATH=\$PATH:/usr/local/share/npm-global/bin" > /etc/profile.d/npm-global.sh
+    chmod +x /etc/profile.d/npm-global.sh
+fi
 
 # Helper to change ownership if user exists
 chk_chown() {
@@ -168,24 +178,23 @@ if [ -n "${EXTENSIONS}" ]; then
     echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
     
     # Get the absolute path of the gemini executable
-    # Prioritize npm global prefix
-    NPM_GLOBAL_PREFIX=$(npm config get prefix -g)
-    if [ -x "${NPM_GLOBAL_PREFIX}/bin/gemini" ]; then
-        GEMINI_BIN="${NPM_GLOBAL_PREFIX}/bin/gemini"
-    else
-        GEMINI_BIN=$(which gemini || echo "/usr/local/bin/gemini")
-    fi
+    GEMINI_BIN="/usr/local/share/npm-global/bin/gemini"
+    echo "Using gemini binary: ${GEMINI_BIN}"
 
     # Use comma as delimiter to split the extensions string
-    IFS=',' read -ra EXT_LIST <<< "${EXTENSIONS}"
-    for ext in "${EXT_LIST[@]}"; do
+    IFS=',' read -ra ADDR <<< "${EXTENSIONS}"
+    for ext in "${ADDR[@]}"; do
         # Trim whitespace
         ext=$(echo "${ext}" | xargs)
         if [ -n "${ext}" ]; then
             echo "Installing extension: ${ext} for ${GEMINI_USER}"
             # Run as GEMINI_USER to ensure extensions are installed in their home directory
-            # We ensure PATH is preserved and common paths are included
-            su "${GEMINI_USER}" -c "PATH=$PATH:/usr/local/bin:/usr/bin ${GEMINI_BIN} extensions install ${ext}"
+            # We ensure PATH includes node and the shared gemini bin. 
+            # node might be in various places depending on how it was installed.
+            NODE_BIN=$(which node || echo "")
+            NODE_DIR=$(dirname "${NODE_BIN}")
+            su "${GEMINI_USER}" -c "PATH=\$PATH:/usr/local/share/npm-global/bin:${NODE_DIR} ${GEMINI_BIN} extensions install ${ext}"
+            echo "Extension installation command finished with exit code $?"
         fi
     done
 fi
