@@ -4,6 +4,7 @@ GEMINI_CLI_VERSION=${VERSION:-latest}
 GEMINIFILES=${GEMINIFILES:-""}
 KEEP_GOOGLE_API_CREDENTIALS=${KEEP_GOOGLE_API_CREDENTIALS:-false}
 GOOGLE_API_CREDENTIALS_PERSIST_DIR=${GOOGLE_API_CREDENTIALS_PERSIST_DIR:-"/dc/gemini-cli"}
+EXTENSIONS=${EXTENSIONS:-""}
 
 set -e
 
@@ -158,5 +159,24 @@ if [ "$KEEP_GOOGLE_API_CREDENTIALS" = "true" ]; then
     echo "Persistence link created: ${AUTH_FILE} -> ${PERSIST_AUTH_FILE}"
 else
     echo "Google API credentials persistence not enabled, skipping."
+fi
+
+# Install Gemini CLI extensions if provided
+if [ -n "${EXTENSIONS}" ]; then
+    echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
+    
+    # Use comma as delimiter to split the extensions string
+    IFS=',' read -ra ADDR <<< "${EXTENSIONS}"
+    for ext in "${ADDR[@]}"; do
+        # Trim whitespace
+        ext=$(echo "${ext}" | xargs)
+        if [ -n "${ext}" ]; then
+            echo "Installing extension: ${ext} for ${GEMINI_USER}"
+            # Run as GEMINI_USER to ensure extensions are installed in their home directory
+            su - "${GEMINI_USER}" <<EOF
+                gemini extensions install "${ext}"
+EOF
+        fi
+    done
 fi
 

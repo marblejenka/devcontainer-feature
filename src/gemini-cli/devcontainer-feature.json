@@ -27,6 +27,11 @@
       "type": "string",
       "default": "/dc/gemini-cli",
       "description": "The directory where Google API credentials will be persisted when keep_google_api_credentials is enabled."
+    },
+    "extensions": {
+      "type": "string",
+      "default": "",
+      "description": "A comma-separated list of Gemini CLI extensions to install (e.g., 'https://github.com/gemini-cli-extensions/conductor')."
     }
   },
   "customizations": {
