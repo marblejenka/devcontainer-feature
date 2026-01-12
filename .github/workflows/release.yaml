@@ -26,14 +26,32 @@ jobs:
           set -eo pipefail
           while IFS= read -r file; do
             feature_dir=$(dirname "$file")
-            if ! git diff --quiet HEAD~1 HEAD -- "$feature_dir"; then
-              echo "Changes detected in $feature_dir. Bumping version for $file"
+            # Get the last commit that changed the "version" line in the json file
+            last_bump_commit=$(git log -G '"version": "' -1 --format=%H -- "$file")
+            
+            should_bump=false
+            if [ -z "$last_bump_commit" ]; then
+              echo "No version change history found for $file. Bumping version."
+              should_bump=true
+            else
+              # Check for any commits in the feature directory since the last version bump
+              # (excluding the version bump commit itself)
+              changes=$(git log "${last_bump_commit}..HEAD" --oneline -- "$feature_dir")
+              if [ -n "$changes" ]; then
+                echo "Changes detected in $feature_dir since last version bump ($last_bump_commit):"
+                echo "$changes"
+                should_bump=true
+              else
+                echo "No changes detected in $feature_dir since last version bump."
+              fi
+            fi
+
+            if [ "$should_bump" = "true" ]; then
+              echo "Bumping version for $file"
               tmp=$(mktemp)
               # Increment patch version (index 2) after validating semantic version format (major.minor.patch)
               jq '.version |= (if test("^[0-9]+\\.[0-9]+\\.[0-9]+$") then (split(".") | map(tonumber) | .[2] += 1 | map(tostring) | join(".")) else error("Invalid semantic version format for .version") end)' "$file" > "$tmp" && mv "$tmp" "$file"
               echo "New version: $(jq -r .version "$file")"
-            else
-              echo "No changes detected in $feature_dir. Skipping version bump."
             fi
           done < <(find src -name "devcontainer-feature.json")
 
