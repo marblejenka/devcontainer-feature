@@ -200,8 +200,8 @@ if [ -n "${EXTENSIONS}" ]; then
         ext="${ext%"${ext##*[![:space:]]}"}"
         if [ -n "${ext}" ]; then
             # Validate extension name to avoid shell injection via EXTENSIONS
-            # Allow alphanumeric, underscores, dots, colons, hyphens, and forward slashes for URLs
-            if ! printf '%s\n' "${ext}" | grep -Eq '^[A-Za-z0-9_.:/-]+$'; then
+            # Allow alphanumeric, underscores, dots, colons, at-signs, hyphens, and forward slashes for URLs and npm-style names
+            if ! printf '%s\n' "${ext}" | grep -Eq '^[A-Za-z0-9_.:/@-]+$'; then
                 echo "Skipping invalid extension name (contains unsafe characters): ${ext}"
                 continue
             fi
