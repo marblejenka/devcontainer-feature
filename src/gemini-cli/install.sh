@@ -173,44 +173,43 @@ else
     echo "Google API credentials persistence not enabled, skipping."
 fi
 
-# Install Gemini CLI extensions if provided
+# Install Gemini CLI extensions if provided. 
+# Note: These are extensions for the Gemini CLI itself, not VS Code extensions.
 if [ -n "${EXTENSIONS}" ]; then
     echo "Installing Gemini CLI extensions: ${EXTENSIONS}"
     
     # Get the absolute path of the gemini executable
-    # Prefer the previously configured npm prefix if available
+    # Prefer the shared npm prefix location configured earlier in the script
     if [ -n "${NPM_CONFIG_PREFIX}" ] && [ -x "${NPM_CONFIG_PREFIX}/bin/gemini" ]; then
         GEMINI_BIN="${NPM_CONFIG_PREFIX}/bin/gemini"
     else
         GEMINI_BIN=$(command -v gemini 2>/dev/null || echo "/usr/local/bin/gemini")
     fi
 
-    # Verify that GEMINI_BIN is an executable before proceeding
+    # Verify that GEMINI_BIN is executable
     if [ ! -x "${GEMINI_BIN}" ]; then
         echo "Error: gemini CLI binary not found or not executable (tried: ${GEMINI_BIN})." >&2
-        echo "       Ensure the gemini CLI is installed and available in PATH before installing extensions." >&2
         exit 1
     fi
+
     # Use comma as delimiter to split the extensions string
     IFS=',' read -ra EXT_LIST <<< "${EXTENSIONS}"
     for ext in "${EXT_LIST[@]}"; do
-        # Trim leading and trailing whitespace using bash parameter expansion
+        # Trim whitespace
         ext="${ext#"${ext%%[![:space:]]*}"}"
         ext="${ext%"${ext##*[![:space:]]}"}"
+        
         if [ -n "${ext}" ]; then
-            # Validate extension name to avoid shell injection via EXTENSIONS
-            # Allow alphanumeric, underscores, dots, colons, at-signs, hyphens, and forward slashes for URLs and npm-style names
+            # Validate extension name/URL to avoid shell injection
             if ! printf '%s\n' "${ext}" | grep -Eq '^[A-Za-z0-9_.:/@-]+$'; then
                 echo "Skipping invalid extension name (contains unsafe characters): ${ext}"
                 continue
             fi
 
-            echo "Installing extension: ${ext} for ${GEMINI_USER}"
-            # Run as GEMINI_USER to ensure extensions are installed in their home directory
-            # We ensure PATH is preserved and common paths are included
-            # Pass the extension name via an environment variable to avoid injecting into the shell command
-            GEMINI_EXTENSION_NAME="${ext}" \
-            su "${GEMINI_USER}" -c "PATH=\"$PATH\":/usr/local/bin:/usr/bin \"${GEMINI_BIN}\" extensions install \"\${GEMINI_EXTENSION_NAME}\""
+            echo "Installing Gemini CLI extension '${ext}' for user ${GEMINI_USER}..."
+            # Execute installation as the GEMINI_USER to ensure extensions are placed in their home directory (~/.gemini/extensions).
+            # We explicitly pass the current PATH to ensure 'node' and 'gemini' are found.
+            su "${GEMINI_USER}" -c "PATH='${PATH}' \"${GEMINI_BIN}\" extensions install \"${ext}\""
         fi
     done
 fi
