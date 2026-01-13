@@ -11,10 +11,14 @@
     },
     "mounts": [
         {
-            "source": "gemini-cli-persistence","target": "/dc/gemini-cli","type": "volume"
+            "source": "gemini-cli-persistence",
+            "target": "/dc/gemini-cli",
+            "type": "volume"
         },
         {
-            "source": "gcloud-cli-persistence","target": "/dc/gcloud-cli","type": "volume"
+            "source": "gcloud-cli-persistence",
+            "target": "/dc/gcloud-cli",
+            "type": "volume"
         }
     ],
     "postCreateCommand": "npm install -g @devcontainers/cli",
