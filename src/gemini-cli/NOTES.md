@@ -8,20 +8,20 @@ We support Ubuntu-based operating systems and have tested the following containe
 
 ## Use with `default feature`
 
-By adding this feature to `Dev › Containers: Default Features`, you can install gemini-cli in all development environments using Dev Containers locally in VSCode. Open the settings screen, search for `default feature`, and add the feature via `Edit in Settings.json`.
+To install the Gemini CLI across all your development environments that use Dev Containers locally in VSCode, add this feature to `Dev › Containers: Default Features`. To do this, open the VSCode settings, search for `default feature`, and then add the feature by selecting `Edit in settings.json`.
 
 TODO Add image imgs/default-feature.png
 
 
 ## Persistence of CLI Credentials
 
-This feature ensures that your authentication state (e.g., Google OAuth tokens) is preserved even after rebuilding the container. By defining a Named Volume in `devcontainer.json`, the sensitive credential files are stored outside the container's ephemeral file system. Note that this feature only targets the `Login with Google` option and ensures the session persists across container rebuilds.
+This feature preserves your authentication state (e.g., Google OAuth tokens) across container rebuilds. By defining a named volume in `devcontainer.json`, sensitive credential files are stored outside the container's ephemeral file system. Please note that this feature specifically targets the `Login with Google` option, ensuring that your session persists across container rebuilds.
 
 ### How it works
 
-- A dedicated volume is expected to be mounted at `/dc/gemini-cli`.
-- The authentication file (`~/.gemini/oauth_creds.json`) is symlinked to this persistent volume by the feature.
-- This allows your login session to persist while still allowing other configuration files to be managed via your GEMINIFILES repository.
+- A dedicated volume should be mounted at `/dc/gemini-cli`.
+- The feature symlinks the authentication file (`~/.gemini/oauth_creds.json`) to this persistent volume.
+- This ensures your login session persists while allowing other configuration files to be managed through your GEMINIFILES repository.
 
 ### Example of `devcontainer.json`
 
@@ -43,9 +43,9 @@ This feature ensures that your authentication state (e.g., Google OAuth tokens) 
 
 ### Authentication Scope & Persistence Limitations
 
-This persistence feature is specifically designed for the `Login with Google` (OAuth) flow. Please note that it does **not** manage or affect the following authentication methods:
+This persistence feature is designed specifically for the `Login with Google` (OAuth) flow. It does **not** manage or affect the following authentication methods:
 
-- API Key (Token): If you use an API Key, it is not stored in the persistent volume. Users are expected to manage API Keys securely via environment variables or your preferred secret management provider.
+- API Key (Token): API Keys are not stored in the persistent volume. Users are expected to manage them securely via environment variables or their preferred secret management provider.
 
-- Vertex AI: Authentication for Vertex AI is handled through the Google Cloud CLI (gcloud). To persist Vertex AI credentials, please use the `gcloud-cli-persistence` feature instead of (or alongside) this one.
+- Vertex AI: Authentication for Vertex AI is handled via the Google Cloud CLI (gcloud). To persist Vertex AI credentials, use the `gcloud-cli-persistence` feature instead of (or in addition to) this one.
 
