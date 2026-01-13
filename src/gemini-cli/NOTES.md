@@ -10,7 +10,7 @@ We support Ubuntu-based operating systems and have tested the following containe
 
 To install the Gemini CLI across all your development environments that use Dev Containers locally in VSCode, add this feature to `Dev › Containers: Default Features`. To do this, open the VSCode settings, search for `default feature`, and then add the feature by selecting `Edit in settings.json`.
 
-TODO Add image imgs/default-feature.png
+![Default Feature Image](imgs/default-feature.png)
 
 
 ## Persistence of CLI Credentials
