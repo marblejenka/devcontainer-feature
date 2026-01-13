@@ -18,7 +18,7 @@ Maintaining authentication state across container rebuilds is crucial. This feat
 
 ### Login with Google (OAuth)
 
-This feature provides persistence mechanism for the `Login with Google` (OAuth) flow. By utilizing the `keep_google_api_credentials` option, you can preserve your Google OAuth tokens across container rebuilds within a named volume.
+This feature can persist credentials for the `Login with Google` (OAuth) flow. Enable the `keep_google_api_credentials` option to preserve your Google OAuth tokens across container rebuilds by storing them in a named volume.
 
 #### How it works
 
