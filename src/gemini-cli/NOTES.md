@@ -1,3 +1,18 @@
+## OS Support
+
+We support Ubuntu-based operating systems and have tested the following container images:
+
+- ubuntu:latest
+- mcr.microsoft.com/devcontainers/base:ubuntu
+- mcr.microsoft.com/devcontainers/universal:linux
+
+## Use with `default feature`
+
+By adding this feature to `Dev › Containers: Default Features`, you can install gemini-cli in all development environments using Dev Containers locally in VSCode. Open the settings screen, search for `default feature`, and add the feature via `Edit in Settings.json`.
+
+TODO Add image imgs/default-feature.png
+
+
 ## Persistence of CLI Credentials
 
 This feature ensures that your authentication state (e.g., Google OAuth tokens) is preserved even after rebuilding the container. By defining a Named Volume in `devcontainer.json`, the sensitive credential files are stored outside the container's ephemeral file system. Note that this feature only targets the `Login with Google` option and ensures the session persists across container rebuilds.

@@ -4,15 +4,17 @@
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/marblejenka/devcontainer-feature/gemini-cli:0": {
             "geminifiles": "https://github.com/marblejenka/geminifiles.git",
-            "keep_google_api_credentials": true
+            "keep_google_api_credentials": true,
+            "extensions": "https://github.com/gemini-cli-extensions/conductor"
         },
         "ghcr.io/marblejenka/devcontainer-feature/tlaplus:0": {}
     },
     "mounts": [
         {
-            "source": "gemini-cli-persistence",
-            "target": "/dc/gemini-cli",
-            "type": "volume"
+            "source": "gemini-cli-persistence","target": "/dc/gemini-cli","type": "volume"
+        },
+        {
+            "source": "gcloud-cli-persistence","target": "/dc/gcloud-cli","type": "volume"
         }
     ],
     "postCreateCommand": "npm install -g @devcontainers/cli",
