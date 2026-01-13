@@ -27,7 +27,7 @@ This feature preserves your authentication state (e.g., Google OAuth tokens) acr
 
 ```json
 "features": {
-    "gemini-cli": {
+    "ghcr.io/marblejenka/devcontainer-feature/gemini-cli:0": {
         "keep_google_api_credentials": true
     }
 },
@@ -47,5 +47,22 @@ This persistence feature is designed specifically for the `Login with Google` (O
 
 - API Key (Token): API Keys are not stored in the persistent volume. Users are expected to manage them securely via environment variables or their preferred secret management provider.
 
-- Vertex AI: Authentication for Vertex AI is handled via the Google Cloud CLI (gcloud). To persist Vertex AI credentials, use the `gcloud-cli-persistence` feature instead of (or in addition to) this one.
+- Vertex AI: Authentication for Vertex AI is handled via the Google Cloud CLI (gcloud). To persist Vertex AI credentials, use the `gcloud-cli-persistence` feature instead of (or in addition to) this one. 
 
+example for vertex ai
+
+```json
+"features": {
+    "ghcr.io/jajera/features/gcloud-cli:1": {},
+    "ghcr.io/joshuanianji/devcontainer-features/gcloud-cli-persistence:1": {},
+    "ghcr.io/marblejenka/devcontainer-feature/gemini-cli:0": {}
+},
+
+"mounts": [
+    {
+        "source": "gcloud-cli-persistence",
+        "target": "/dc/gcloud-cli",
+        "type": "volume"
+    }
+]
+```
