@@ -1,32 +1,32 @@
 ## OS Support
 
-We support Ubuntu-based operating systems and have tested the following container images:
+This feature supports Ubuntu-based operating systems and has been tested with the following container images:
 
-- ubuntu:latest
-- mcr.microsoft.com/devcontainers/base:ubuntu
-- mcr.microsoft.com/devcontainers/universal:linux
+-   `ubuntu:latest`
+-   `mcr.microsoft.com/devcontainers/base:ubuntu`
+-   `mcr.microsoft.com/devcontainers/universal:linux`
 
-## Use with `default feature`
+## Using with Default Features
 
-To install the Gemini CLI across all your development environments that use Dev Containers locally in VSCode, add this feature to `Dev › Containers: Default Features`. To do this, open the VSCode settings, search for `default feature`, and then add the feature by selecting `Edit in settings.json`.
+To install the Gemini CLI across all your development environments that use Dev Containers, you can add this feature to `Dev > Containers: Default Features` in VS Code settings. Open your VS Code settings, search for `default feature`, and then select `Edit in settings.json` to add the feature.
 
 ![Default Feature Image](imgs/default-feature.png)
 
 ## Persistence of CLI Credentials
 
-It is crucial to help persist authentication state. We can do it for across container rebuilds by storing sensitive files on a named volume. The persistence for 'Login with Google (OAuth)' is handled by this feature itself, while persistence for other authentication methods, such as Vertex AI, are typically managed by other related features or external mechanisms. Below are the guidance for different authentication methods.
+Maintaining authentication state across container rebuilds is crucial. This feature helps manage the persistence of credentials for the 'Login with Google (OAuth)' method using a named volume. Other authentication methods, such as Vertex AI or API Keys, typically rely on related features or external mechanisms for persistence.
 
 ### Login with Google (OAuth)
 
-This persistence feature is designed specifically for the `Login with Google` (OAuth) flow by use of `keep_google_api_credentials`. It preserves your Google OAuth tokens across container rebuilds in the named volume.
+This feature provides persistence mechanism is specifically designed for the `Login with Google` (OAuth) flow, utilizing the `keep_google_api_credentials` option to preserve your Google OAuth tokens across container rebuilds within a named volume.
 
 #### How it works
 
--   A dedicated volume should be mounted at `/dc/gemini-cli`.
--   The feature symlinks the authentication file (`~/.gemini/oauth_creds.json`) to this persistent volume.
--   This ensures your login session persists while allowing other configuration files to be managed through your GEMINIFILES repository.
+-   A dedicated volume is mounted at `/dc/gemini-cli`.
+-   The feature creates a symlink from the authentication file (`~/.gemini/oauth_creds.json`) to this persistent volume.
+-   This ensures your login session remains active across rebuilds, while other configuration files can be managed independently, for example, through your GEMINIFILES repository.
 
-#### Example of `devcontainer.json`
+#### Example `devcontainer.json` Configuration
 
 ```json
 "features": {
@@ -43,11 +43,11 @@ This persistence feature is designed specifically for the `Login with Google` (O
 ]
 ```
 
-### 2. Vertex AI
+### Vertex AI
 
-Authentication for Vertex AI is handled via the Google Cloud CLI (`gcloud`). To persist Vertex AI credentials, it is recommended to use a feature that persists `gcloud` credentials, such as `gcloud-cli-persistence`.
+Authentication for Vertex AI is handled through the Google Cloud CLI (`gcloud`). To persist Vertex AI credentials, it is recommended to use a feature specifically designed for `gcloud` credential persistence, such as `gcloud-cli-persistence`.
 
-#### Example of `devcontainer.json`
+#### Example `devcontainer.json` Configuration
 
 ```json
 "features": {
@@ -64,16 +64,15 @@ Authentication for Vertex AI is handled via the Google Cloud CLI (`gcloud`). To 
 ]
 ```
 
-#### .env
-also, you may want to create `.env` at project root so that automatically select the google cloud project and model region.
+#### Environment Variables
+
+You may also want to create a `.env` file at your project root to automatically select the Google Cloud project and model region.
 
 ```
 GOOGLE_CLOUD_PROJECT=your_project_id
-GOOGLE_CLOUD_LOCATION=global # or maybe you prefered
+GOOGLE_CLOUD_LOCATION=global # or your preferred region
 ```
 
-### 3. API Key (Token)
+### API Key (Token)
 
-This persistence feature does not manage API Keys (Tokens). Users are expected to manage them securely, for example, via environment variables or a preferred secret management provider(e.g. [1Password CLI (op)
-](ghcr.io/flexwie/devcontainer-features/op)).
-
+This feature does not manage API Keys (Tokens). Users are expected to handle these securely, for instance, by using environment variables or a preferred secret management provider (e.g., [1Password CLI (op)](https://ghcr.io/flexwie/devcontainer-features/op)).
