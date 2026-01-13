@@ -64,6 +64,14 @@ Authentication for Vertex AI is handled via the Google Cloud CLI (`gcloud`). To 
 ]
 ```
 
+#### .env
+also, you may want to create `.env` at project root so that automatically select the google cloud project and model region.
+
+```
+GOOGLE_CLOUD_PROJECT=your_project_id
+GOOGLE_CLOUD_LOCATION=global # or maybe you prefered
+```
+
 ### 3. API Key (Token)
 
 This persistence feature does not manage API Keys (Tokens). Users are expected to manage them securely, for example, via environment variables or a preferred secret management provider(e.g. [1Password CLI (op)
